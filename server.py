@@ -16,17 +16,19 @@ app.jinja_env.undefined = StrictUndefined
 @app.route('/')
 def index():
     """Homepage"""
+
     if 'user_id' in session:
         # logged_name = User.query.filter_by(user_id == session['user_id']) Find username that matches
         # ID of user logged in
         print('You are logged in as ' + str(session['user_id']))
+        flash('You are now logged in!')
+        
+
     else:
         print('No one is currently logged in.')
 
     return render_template('homepage.html')
 
-# @app.route('/login', methods=['POST'])
-# def login_form():
 
 @app.route('/login', methods=['GET'])
 def login_form():
@@ -37,14 +39,20 @@ def login_form():
 @app.route('/login', methods=['POST'])
 def login_process():
     # Users may use email OR username to log in
-    login_id = request.form.get('login_id')
-    password = request.form.get('password')
+    login_id = request.form.get('login_id') #jhacks
+    password = request.form.get('password') #jhacks
+
+    test = User.query.filter(User.email == login_id)
+    print("This is a test:")
+    print(test)
+    # Returned: login_id = %(email_1)s
 
     user = User.query.filter(User.email == login_id).first()
+    # none
 
     if not user:
         user = User.query.filter(User.username == login_id).first()
-
+        # none 
 
     if user:
         if user.password == password:
@@ -52,8 +60,8 @@ def login_process():
             flash("Logged in")
             session['user_id'] = user.user_id # saves to session
             # allows us to show user on any page
-            return redirect('/users/{}'.format(user.user_id))
-
+            # return redirect('/users/{}'.format(user.user_id))
+            return redirect('/my_page')
         else: 
             print("Password does not match user!")
             flash("Incorrect Password")
@@ -73,6 +81,8 @@ def registration_process():
     username = request.form.get('reg_username')
     email = request.form.get('reg_email')
     password = request.form.get('reg_pw')
+    fname = request.form.get('reg_fname')
+    lname = request.form.get('reg_lname')
 
     # Check that user var matches an entry in db
     user = User.query.filter(User.email == email).first()
@@ -81,7 +91,7 @@ def registration_process():
         # Add user to db
         print("User added!")
         flash("User added!")
-        user = User(username=username, password=password, email=email)
+        user = User(username=username, password=password, email=email, fname=fname, lname=lname)
         db.session.add(user)
         db.session.commit()
         session['user_id'] = user.user_id
@@ -94,8 +104,19 @@ def registration_process():
     return redirect('/')
     # Redirect to home page
 
+@app.route('/logout')
+def logout_process():
+    """Logs user out from website"""
+    del session['user_id']
+    return redirect('/')
 
-@app.route("/users")
+
+@app.route('/my_page')
+def user_feed():
+
+    return render_template('my_page.html')
+
+@app.route('/users')
 def user_list():
     """Show list of users."""
 
@@ -104,8 +125,8 @@ def user_list():
 
 
 @app.route('/user/<user_id>')
-def user_profile(user_id):
-
+def show_user_profile(user_id):
+    """Shows specific user's profile"""
     user = User.query.get(user_id)
 
     return render_template('user_profile.html', user=user)

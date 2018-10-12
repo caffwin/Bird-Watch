@@ -1,0 +1,5 @@
+Corvus brachyrhynchos | American_Crow | 1
+Buteo jamaicensis | Red-tailed Hawk | 2
+Passer domestics | House Sparrow | 3
+Larus occidentals | Western Gull | 4
+Larus californicus | California Gull | 5

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="header">Welcome to the bird watcc!</h1>
+
+<h2>Here is our bird of the day!</h2>
+
+
+{% if 'user_id' not in session %}
+
+    <a href="/login"><button type="logInButton">Log In</button></a>
+
+    <a href="/register"><button type="registerButton">Register</button></a>
+
+{% else %}
+   
+    <a href="/user/{{ session['user_id'] }}"> My page </a>
+    <br>
+    <a href="/logout"><button type="logOutButton">Log Out</button></a>
+
+{% endif %}
+
+<img src="https://www.australiangeographic.com.au/wp-content/uploads/2018/06/pink-robin-1.jpg" class="homepage_img">
+</img>
+<br>
+
+{% endblock %}

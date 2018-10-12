@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="header">Registration Page</h1>
+
+<form action='/register', method='POST'>
+    First Name: <input type='text' name='reg_fname'>
+    <br>
+    Last Name: <input type='text' name='reg_lname'>
+    <br>
+    Email: <input type='text' name='reg_email'>
+    <br>
+    Username: <input type='text' name='reg_username'>
+    <br>
+    Enter Password: <input type='password' name='reg_pw'>
+    <br>
+    <input type='submit'>
+</form>
+
+{% endblock %}

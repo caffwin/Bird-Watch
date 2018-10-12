@@ -13,6 +13,7 @@ class Bird(db.Model):
     scientific_name = db.Column(db.String(50), nullable=False)
     habitat = db.Column(db.String(50), nullable=True)
     number = db.Column(db.Integer, nullable=True)
+    # picture_id = db.Column(db.String(200), nullable=True)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -27,10 +28,10 @@ class User(db.Model):
 
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     username = db.Column(db.String(50), nullable=False)
-    fname = db.Column(db.String(50), nullable=True)
-    lname = db.Column(db.String(50), nullable=True)
-    email = db.Column(db.String(50), nullable=False)
-    password = db.Column(db.String(50), nullable=False)
+    fname = db.Column(db.String(50))
+    lname = db.Column(db.String(50))
+    email = db.Column(db.String(50))
+    password = db.Column(db.String(50))
 
 
     def __repr__(self):
