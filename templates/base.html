@@ -3,9 +3,27 @@
     <head>
         <title>{% block title %}{% endblock %}</title>
         <h1>{% block header %}{% endblock %}</h1>
+        
         <link rel="stylesheet" type="text/css" href="/static/styles.css">
     </head>
     <body>
-        {% block content %}{% endblock %}
+        {% block content %}
+        
+        {% if 'user_id' not in session %}
+
+            <a href="/login"><button type="logInButton">Log In</button></a>
+
+            <a href="/register"><button type="registerButton">Register</button></a>
+
+        {% else %}
+            {}, you are logged in!
+            <br>
+            <a href="/user/{{ session['user_id'] }}"> My page </a>
+            <br>
+            <a href="/logout"><button type="logOutButton">Log Out</button></a>
+
+        {% endif %}
+
+        {% endblock %}
     </body>
 </html>

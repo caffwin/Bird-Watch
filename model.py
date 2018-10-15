@@ -12,13 +12,13 @@ class Bird(db.Model):
     common_name = db.Column(db.String(50), nullable=False)
     scientific_name = db.Column(db.String(50), nullable=False)
     habitat = db.Column(db.String(50), nullable=True)
-    number = db.Column(db.Integer, nullable=True)
-    # picture_id = db.Column(db.String(200), nullable=True)
+    # number = db.Column(db.Integer, nullable=True)
+    image = db.Column(db.String(500), nullable=True)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return 'Bird ID: {}, Common Name: {}, Scientific Name: {}'.format(self.bird_id, self.common_name, self.scientific_name)
+        return 'Bird ID: {}, Common Name: {}, Scientific Name: {}'.format(self.bird_id, self.common_name, self.scientific_name, self.image)
 
 
 class User(db.Model):
@@ -32,6 +32,7 @@ class User(db.Model):
     lname = db.Column(db.String(50))
     email = db.Column(db.String(50))
     password = db.Column(db.String(50))
+
 
 
     def __repr__(self):
@@ -48,21 +49,23 @@ class Favorite(db.Model):
     favorite_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     bird_id = db.Column(db.Integer, 
                         db.ForeignKey('birds.bird_id')) #table.attribute
+    
     user_id = db.Column(db.Integer, 
                         db.ForeignKey('users.user_id'))
-    fav_date = db.Column(db.DateTime, nullable=False)
+    # fav_date = db.Column(db.DateTime)
 
     user = db.relationship('User',
-                           backref=db.backref("favorites",
-                                              order_by=favorite_id))
+                           backref="favorites",
+                           order_by=favorite_id)
+
     bird = db.relationship('Bird')
     # if backref existed here, we would have relationship to # of times 
-    #a bird has been favorited between all users 
+    # a bird has been favorited between all users 
     
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return 'User ID: {}, Bird ID: {}'.format(self.user_id, self.bird_id)
+        return '<User ID: {}, Bird ID: {}>'.format(self.user_id, self.bird_id)
 
 
 class Checklist(db.Model):
@@ -80,9 +83,11 @@ class Checklist(db.Model):
     add_date = db.Column(db.DateTime, nullable=False)
 
     user = db.relationship('User',
-                            backref=db.backref("checklist",
-                                          order_by=checklist_id))
+                            backref="checklist",
+                            order_by=checklist_id)
+
     bird = db.relationship('Bird')
+
 
 
     def __repr__(self):
@@ -90,22 +95,28 @@ class Checklist(db.Model):
 
         return 'User ID: {}, Bird ID: {}, Seen: {}'.format(self.user_id, self.bird_id, self.seen)
 
+
 # class Following(db.Model):
 #     """Table of users and other users they have added to follow"""
 #     __tablename__ = "following"
 
 #     followee_id = db.Column(db.Integer,
-#                   db.ForeignKey(users.user_id))
-#     following_id = db.Column(db.Integer,
-#                    db.ForeignKey())
+#                   db.ForeignKey('users.user_id'))
+#     follower_id = db.Column(db.Integer,
+#                    db.ForeignKey('users.???'))
 
+    # user_to_follow = db.relationship('User', 
+    #                         backref=db.backref("following",
+    #                                             order_by=user_id))
 
-# def __repr__(self):
+    # followee = db.relationship('User')
+
+#     def __repr__(self):
 #         """Provide helpful representation when printed."""
 
-#     return f"""<Following followee_id={self.followee_id} 
-#                follower_id={self.follower_id} 
-#                """
+#         return f"""<Following followee_id={self.user_to_follow} 
+#                    follower_id={self.followee} 
+#                    """
 
 # Helper Functions
 

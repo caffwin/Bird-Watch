@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Birds List</h1>
+
+  <h2>Birds</h2>
+
+    {% for bird in birds %}
+     <li>
+        <a href="/birds/{{ bird.bird_id }}">
+            
+          {{ bird.common_name }}</a> ({{ bird.scientific_name }})
+        
+     </li>
+    {% endfor %}
+
+
+{% endblock %}

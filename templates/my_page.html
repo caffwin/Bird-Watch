@@ -1,13 +1,47 @@
 {% extends 'base.html' %}
 
+{% block title %}User Feed{% endblock %}
 
 {% block content %}
 
-<h1>My Feed</h1>
 
+<h1>My Feed</h1>
+<h2>User ID: {{ user.user_id }}</h2>
+
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0exBi6zdo2_NSyPhtPeaz6VTxwwlabc1P-BlbAQz90L8VWvYhjQ"></img>
+<br>
+<p>** Add button for image uploader here ** </p>
+
+<form action="/upload" method="POST" enctype="multipart/form-data" >
+      <span class="btn btn-default btn-file">
+        Browse: <input type="file" name="upload-image">
+      </span>
+    <br>  
+    <input type="submit" value="Submit" class="btn btn-primary">
+</form>
+
+<br>
+
+<p>First Name: {{ user.fname }} 
+<br>    
+Last Name: {{ user.lname }} 
+<br>
+Email: {{ user.email }}</p>
+
+
+
+Here are all of {{ user.fname }}'s Favorites!
+<br>
+{% for favorite in user.favorites %}
+    <br>
+    {{ favorite.bird.common_name }}
+{% endfor %}
+
+
+<br>
 Bird things:
 
-BotD
+<p>BotD</p>
 
 
 {% endblock %}

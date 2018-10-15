@@ -1,1 +1,21 @@
-henlo
+<h1>User {{ user.user_id }}'s profile page</h1>
+<h2>This is public</h2>
+
+{% extends 'base.html' %}
+
+{% block title %}User {{ user.user_id }}'s Profile{% endblock %}
+
+{% block content %}
+
+{{ user.fname }} "{{ user.username}}" {{ user.lname }}'s page!
+<br>
+<br>
+Profile photo
+<br>
+Description
+
+
+<br>
+Favorites list
+
+{% endblock %}
