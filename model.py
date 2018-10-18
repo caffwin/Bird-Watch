@@ -32,7 +32,7 @@ class User(db.Model):
     lname = db.Column(db.String(50))
     email = db.Column(db.String(50))
     password = db.Column(db.String(50))
-
+    image_name = db.Column(db.String(150))
 
 
     def __repr__(self):
@@ -94,6 +94,10 @@ class Checklist(db.Model):
         """Provide helpful representation when printed."""
 
         return 'User ID: {}, Bird ID: {}, Seen: {}'.format(self.user_id, self.bird_id, self.seen)
+
+
+# class BotD(db.Model):
+    """List of birds that may be selected at random for BotD feature"""
 
 
 # class Following(db.Model):

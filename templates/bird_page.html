@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block head %}<link rel="shortcut icon" href="/favicon.ico" />{% endblock %}
+
+{% block title %}Bird Page{% endblock %}
+
+{% block content %}
+
+<h1>Bird Details</h1>
+
+<img src="https://i.pinimg.com/originals/94/78/b5/9478b558a1136e2f9958b458ea2e6dd8.jpg"></img>
+
+
+<h2>{{ bird.common_name }}</h2>
+
+<script>
+  "use strict";
+
+function faveUnfave(evt) {
+  console.log('testTEST TESTTTTTESTTSTST**');
+  var faveButton = document.querySelector('.faveText');
+  if (faveButton.innerHTML === 'Favorite') {
+    faveButton.innerHTML = 'Unfavorite';
+  }
+  else {
+    faveButton.innerHTML = 'Favorite';
+  }
+}
+
+faveButton.addEventListener('click', faveUnfave);
+
+</script>
+
+<button id='faveOnOff' class='faveText' onclick='faveUnfave()'>Favorite</button>
+
+
+<p>{{ bird.common_name }}'s scientific name is {{ bird.scientific_name }}</p>
+
+<b>Bird info:</b> <span id='birdInfo'>Unknown</span>
+
+
+<p>Bird song clip (if it exists):</p>
+
+
+
+
+{% endblock %}

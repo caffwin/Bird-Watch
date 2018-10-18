@@ -8,9 +8,17 @@
 <h1>My Feed</h1>
 <h2>User ID: {{ user.user_id }}</h2>
 
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0exBi6zdo2_NSyPhtPeaz6VTxwwlabc1P-BlbAQz90L8VWvYhjQ"></img>
+{% if user.image_name %}
+
+    <img class="user_pic" src="/static/user_pics/{{user.image_name}}"></img>
+
+{% else %}
+
+    <img class="user_pic" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0exBi6zdo2_NSyPhtPeaz6VTxwwlabc1P-BlbAQz90L8VWvYhjQ"></img>
+
+{% endif %} 
+
 <br>
-<p>** Add button for image uploader here ** </p>
 
 <form action="/upload" method="POST" enctype="multipart/form-data" >
       <span class="btn btn-default btn-file">
@@ -30,14 +38,16 @@ Email: {{ user.email }}</p>
 
 
 
-Here are all of {{ user.fname }}'s Favorites!
+{{ user.fname }}'s Favorites!
 <br>
+
 {% for favorite in user.favorites %}
     <br>
+    <input type="checkbox" name="remove_bird" value="bird_to_remove">
     {{ favorite.bird.common_name }}
 {% endfor %}
 
-
+<br>
 <br>
 Bird things:
 

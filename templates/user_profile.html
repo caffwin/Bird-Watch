@@ -6,16 +6,53 @@
 {% block title %}User {{ user.user_id }}'s Profile{% endblock %}
 
 {% block content %}
+Profile photo:
+<br>
 
+{% if user.image_name %}
+
+    <img class="user_pic" src="/static/user_pics/{{user.image_name}}"></img>
+
+{% else %}
+
+    <img class="user_pic" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0exBi6zdo2_NSyPhtPeaz6VTxwwlabc1P-BlbAQz90L8VWvYhjQ"></img>
+    
+{% endif %} 
+
+<br>
 {{ user.fname }} "{{ user.username}}" {{ user.lname }}'s page!
 <br>
+<script>
+  "use strict";
+
+function followUnfollow(evt) {
+  console.log('thissiissaTESTTestt**');
+  var followButton = document.querySelector('.followIcon');
+  if (followButton.innerHTML === 'Follow') {
+    followButton.innerHTML = 'Unfollow';
+  }
+  else {
+    followButton.innerHTML = 'Follow';
+  }
+}
+
+followButton.addEventListener('click', followUnfollow);
+
+</script>
+
+<button id='followAndUnfollow' class='followIcon' onclick='followUnfollow()'>Favorite</button>
+
+
+
 <br>
-Profile photo
+<br>
+<br>
+
 <br>
 Description
-
-
 <br>
 Favorites list
+<br>
+
 
 {% endblock %}

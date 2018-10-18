@@ -6,6 +6,14 @@
 
   <h2>Users</h2>
 
+
+<div class="user_search">
+    Search for a user:
+  <input type="text" placeholder="Search..">
+</div>
+
+<br>
+
     {% for user in users %}
      <li>
         <a href="/users/{{ user.user_id }}">

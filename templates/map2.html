@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block title %}Find birds nearby!{% endblock %}
+
+{% block content %}
+
+<h1>Birding Map via Geolocation</h1>
+<h2>Find nearby birds with our interactive map!</h2>
+
+Enter your coordinates:
+<br>
+<form action='/userlocation', method='POST'>
+Longitude: <input type='text' name='longLocation'>
+<br>
+Latitude: <input type='text' name='latLocation'>
+<br>
+<input type='submit' class='inputLocation'>
+</form>
+<br>
+<br>
+<p>OR use your current location to find nearby birds!</p>
+
+{% endblock %}
+
+{% block head %}
+
+  <title>Geolocation</title>
+  <style>
+      html, body, #map-canvas {
+          height: 100%;
+          margin: 0;
+      }
+
+      .gm-style-iw {
+          color: #04162b;;
+      }
+  </style>
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+  <script>
+      // Note: This example requires that you consent to location sharing when
+      // prompted by your browser. If you see a blank space instead of the map, this
+      // is probably because you have denied permission for location sharing.
+
+      let map;
+
+      function initialize() {
+          let mapOptions = {
+              height: 50%,
+              width: 50%,
+              zoom: 15
+          };
+          map = new google.maps.Map(
+                  document.getElementById('map-canvas'),
+                  mapOptions);
+
+          // Try HTML5 geolocation
+          if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(function (position) {
+                  let pos = new google.maps.LatLng(
+                          position.coords.latitude,
+                          position.coords.longitude);
+
+                  // instead of info window, add marker 
+                  let infowindow = new google.maps.InfoWindow({
+                      map: map,
+                      position: pos,
+                      content: 'Found you!'
+                  });
+
+                  map.setCenter(pos);
+              }, function () {
+                  handleNoGeolocation(true);
+              });
+          } else {
+              // Browser doesn't support Geolocation
+              handleNoGeolocation(false);
+          }
+      }
+
+      function handleNoGeolocation(errorFlag) {
+          let content;
+
+          if (errorFlag) {
+              content = "Error: The Geolocation service failed.";
+          } else {
+              content = "Error: Your browser doesn't support geolocation.";
+          }
+
+          let options = {
+              map: map,
+              position: new google.maps.LatLng(60, 105),
+              content: content
+          };
+
+          let infowindow = new google.maps.InfoWindow(options);
+          map.setCenter(options.position);
+      }
+
+      google.maps.event.addDomListener(window, 'load', initialize);
+
+  </script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script>
+    
+  function getBirds(results) {
+    console.log(results["comName"]);
+    // $('#birdInfo').html(results);
+  }
+
+  function makeRequest() {
+    $.get('/birds.json', getInfo);
+  }
+    $('#getBirdInfo').on('click', makeRequest)
+
+// console.log("Hellooooooo 0");
+// function getNearbyBirds(results) {
+//   console.log("Helloooooooo 1");
+//   console.log(results["comName"]);
+//   $('#showBirdInfo').html(results['comName']);
+//   // for each bird, do this?
+// }
+
+// function makeRequest() {
+//   console.log("HENLO2");
+//   $.get('/birds.json', (results) {
+//       $('#showBirdInfo').html(results['comName']);
+//       alert("Get request made!");
+//   });
+
+// function showBirds(results) {
+//   $.get('')
+// }
+
+  // $.get('https://ebird.org/ws2.0/data/obs/geo/recent?lat=40.712776&lng=-74.005974&key=o42fhp5kl3t3', getBirds(results) {
+  //     $('#showBirdInfo').html(results);
+  //     alert("Get request made!");
+  // });
+
+  </script>
+
+<!--   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuDnbdeS0p_r4xBaPTxhxaNDHDniBNY-k&callback=initMap"
+  async defer>
+  </script> -->
+
+{% endblock %}
+
+{% block body %}
+  <div id="map-canvas"></div>
+{% endblock %}
