@@ -12,24 +12,6 @@
 
 <h2>{{ bird.common_name }}</h2>
 
-<script>
-  "use strict";
-
-function faveUnfave(evt) {
-  console.log('testTEST TESTTTTTESTTSTST**');
-  var faveButton = document.querySelector('.faveText');
-  if (faveButton.innerHTML === 'Favorite') {
-    faveButton.innerHTML = 'Unfavorite';
-  }
-  else {
-    faveButton.innerHTML = 'Favorite';
-  }
-}
-
-faveButton.addEventListener('click', faveUnfave);
-
-</script>
-
 <button id='faveOnOff' class='faveText' onclick='faveUnfave()'>Favorite</button>
 
 
@@ -40,7 +22,46 @@ faveButton.addEventListener('click', faveUnfave);
 
 <p>Bird song clip (if it exists):</p>
 
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+<script>
+  "use strict";
 
 
+
+
+  // let faveOrUnfave = {
+  //   ''
+  // }
+
+function faveUnfave() {
+  $.post('/favorite/{{ bird.bird_id }}', addRemoveFave);
+
+
+}
+
+// check database if fave exists
+
+function addRemoveFave() {
+  
+  var faveButton = document.querySelector('#faveOnOff');
+  // var bird_id = {{ bird.bird_id }};
+  console.log('testTEST TESTTTTTESTTSTST**');
+
+  if (faveButton.innerHTML === 'Favorite') {
+    faveButton.innerHTML = 'Unfavorite';
+    // set this to a specific input
+  }
+  else {
+    faveButton.innerHTML = 'Favorite';
+  }
+}
+
+faveButton.addEventListener('click', faveUnfave);
+// faveButton.addEventListener('click', faveUnfave);
+// $('#faveOnOff').on('click', faveUnfave);
+
+
+</script>
 
 {% endblock %}

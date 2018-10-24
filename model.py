@@ -14,6 +14,7 @@ class Bird(db.Model):
     habitat = db.Column(db.String(50), nullable=True)
     # number = db.Column(db.Integer, nullable=True)
     image = db.Column(db.String(500), nullable=True)
+    # botd_date = db.Column(db.DateTime, nullable=True)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -109,11 +110,11 @@ class Checklist(db.Model):
 #     follower_id = db.Column(db.Integer,
 #                    db.ForeignKey('users.???'))
 
-    # user_to_follow = db.relationship('User', 
-    #                         backref=db.backref("following",
-    #                                             order_by=user_id))
+#     user_to_follow = db.relationship('User', 
+#                             backref=db.backref("following",
+#                                                 order_by=user_id))
 
-    # followee = db.relationship('User')
+#     followee = db.relationship('User')
 
 #     def __repr__(self):
 #         """Provide helpful representation when printed."""
@@ -121,6 +122,29 @@ class Checklist(db.Model):
 #         return f"""<Following followee_id={self.user_to_follow} 
 #                    follower_id={self.followee} 
 #                    """
+
+def example_data():
+    """Create example data for the test database."""
+    # A function that creates a bird and adds it to the database.
+    # A function that creates a user and adds it to the database.
+    # A function that creates a favorite and adds it to the database.
+    # A function that creates a follower/followee pair and adds it to the database.
+
+    # Bird.query.delete()
+
+    # # game = Game(game_id, name, description)
+    # sample_game = Game(name='Ticket to Ride', description='a cross-country train adventure')
+    # sample_game_2 = Game(name='Snakes and Ladders', description='board game')
+
+    # db.session.add_all([sample_game, sample_game_2])
+    # db.session.commit()
+
+
+
+
+
+
+
 
 # Helper Functions
 

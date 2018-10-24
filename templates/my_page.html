@@ -42,11 +42,25 @@ Email: {{ user.email }}</p>
 <br>
 
 {% for favorite in user.favorites %}
+
     <br>
     <input type="checkbox" name="remove_bird" value="bird_to_remove">
     {{ favorite.bird.common_name }}
+
 {% endfor %}
 
+<br>
+<button id='faveOnOff' class='faveText' onclick='faveUnfave()'>Favorite</button>
+<!-- You can only use this button if logged in, and fave exists -->
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script>
+  "use strict";
+
+var delButton = document.querySelector('.delText')
+
+
+</script>
 <br>
 <br>
 Bird things:

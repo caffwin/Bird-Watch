@@ -28,15 +28,14 @@ on earth!
     }
   </style>
 
-    <h3>Geolocation</h3>
-    <div id="map-canvas" height="600px"></div>
+  <h3>Geolocation</h3>
+  <div id="map-canvas" height="600px"></div>
 
-  </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key={{ key }}"></script>
+  
+  <script src='dist/js/map-icons.js'></script>
 
-  <script src="https://maps.googleapis.com/maps/api/js?key={{ key }}">
-  
-  </script>
-  
+'
   <script>
 
       function addMarker(icon_url, latlng, map, text) {
@@ -45,20 +44,20 @@ on earth!
             position: latlng, 
             map: map, 
             title: 'Default hover text', //hover txt
-            icon: 'https://www.unisourceit.com/wp-content/uploads/pin.png' //icon_url
+            // icon: 'https://www.unisourceit.com/wp-content/uploads/pin.png'
         });
         return marker;
       }
 
-      let gloablLat = null;
+      let globalLat = null;
       let globalLng = null;
-
 
       let map;
 
       function initialize() {
           let mapOptions = {
-              zoom: 15
+              zoom: 10
+              // center = pos
           };
           map = new google.maps.Map(
                   document.getElementById('map-canvas'),
@@ -70,12 +69,22 @@ on earth!
                   let pos = new google.maps.LatLng(
                           position.coords.latitude,
                           position.coords.longitude);
-                  console.log(pos)
+                  console.log(pos);
                   // instead of info window, add marker 
-                  let infowindow = new google.maps.InfoWindow({
-                      map: map,
-                      position: pos,
-                      content: 'Somehow you found me'
+                  // let infowindow = new google.maps.InfoWindow({
+                  //     map: map,
+                  //     position: pos,
+                  //     content: 'Somehow you found me'
+                  // });
+
+                  // test marker for current location here:
+
+                  let marker = new google.maps.Marker({
+                    position: pos,
+                    map: map,
+                    title: 'Somehow you found me'
+                    // draggable: true,
+                    // title: 'Drag me!'
                   });
 
                   console.log(position);
@@ -86,17 +95,19 @@ on earth!
                   globalLat = position.coords.latitude
                   globalLng = position.coords.longitude
 
+
+                  map.setCenter(pos);
+
+
                   console.log("GLOBAL LAT IS:")
                   console.log(globalLat);
                   console.log("GLOBAL LNG IS: ")                  
                   console.log(globalLng);
 
-                  // console.log("Map Center Lat is: ")
-                  // console.log(map.center.lat())
-                  // console.log("Map Center Lng is: ")
-                  // console.log(map.center.lng())
-
-                  map.setCenter(pos);
+                  console.log("Map Center Lat is: ")
+                  console.log(map.center.lat())
+                  console.log("Map Center Lng is: ")
+                  console.log(map.center.lng())
 
               }, function () {
                   handleNoGeolocation(true);
@@ -131,19 +142,42 @@ on earth!
           // console.log(map.center.lat())
       }
 
+      // function getMapCenter() {
+      //   let mapCenter = map.getCenter();
+      //   let latitude = mapCenter.lat();
+      //   let longitude = mapCenter.lng();
+      //   console.log("MAP CENTER LAT: ");
+      //   console.log(latitude);
+      //   console.log("MAP CENTER LNG: ");
+      //   console.log(longitude)
+      // }
+
+      // function getUrlLagLng() {
+      //   let latlng = {};
+      //   // assign coordinates of map center 
+
+      //getMapCenter(); 
       google.maps.event.addDomListener(window, 'load', initialize);
     
   </script>
 
 
 <br>
-<button id='getBirdInfo'>Show birds</button>
-<p id='showBirdInfo'>***Bird info should replace this text!***</p>
+<button id='getBirdButton'>Show me all of the nearby birds!</button>
+
+<br>
+<br>
+<select id="birdSelections" name="dropdown">
+   <option value="">Select nearby bird:</option>
+</select>
+<form action='/user_location', method='POST'>
+<input type='submit' class='getBirds' value='Submit'> 
+<br>
 <br>
 <br>
 Use current location to display nearby birds using the button above!
-<form action='/userlocation', method='POST'>
-<!-- <input type='submit' class='getBirds' value='Show birds'>   -->
+
+ 
 <br>
 <br>
 <br>
@@ -167,38 +201,33 @@ console.log("TESTTEST1231123123");
 
 function showBirds(results) {
   // Shows nearby birds if there are more than five 
-  for (let i=0; i < results.length; i++) {
-    if (results[i]['howMany'] > 35) {
-      let latlng = {lat: results[i]['lat'], lng: results[i]['lng']}; //a dictionary
-      // console.log("LATLNG[i]: ")
-      // console.log(latlng)
-      console.log("COMMON NAME OF RESULT AT i: ")
-      console.log(results[i]['comName']);
-      console.log("RESULT AT i: ")
-      console.log(results[i]);
+  // for (let i=0; i < results.length; i++) {
+  
+  let currentBirds = $('#birdSelections');
+  
+  for (bird of results) {
+    if (bird['howMany'] > 5) {
+      let latlng = {lat: bird['lat'], lng: bird['lng']}; 
+      console.log(bird['comName']);
+      console.log(bird);
+
       addMarker('https://www.unisourceit.com/wp-content/uploads/pin.png', latlng, map, results['comName']);
-      $('#showBirdInfo').html(results[i]);
-      // console.log(results[0]['comName']); // shows first index
-       // this line isn't inserting results into the #showBirdInfo element
+
+      let newBird = document.createElement('option');
+      newBird.innerHTML = bird['comName'];
+      currentBirds.append(newBird);
+      // we can use map variable in here!
+      //map.setCenter(pos);
       }
     }
   }
-  //}
 
 function makeRequest() {
-  $.get('/birds.json', showBirds);
+  $.get('/birds.json', {'globalLat': globalLat, 'globalLng': globalLng}, showBirds);
 }
 
-  $('#getBirdInfo').on('click', makeRequest)
+  $('#getBirdButton').on('click', makeRequest)
 
-      // for (let latlng in results[i]) {
-      //   console.log("RESULTS LAT");
-      //   console.log(results[i]['lat']);
-      //   console.log("RESULTS LNG");
-      //   console.log(results[i]['lng']);
-      //   let latlng = {results[i]['lat'], results[i]['lng']};
-      //   
-    
 // for (latlng of results)
 //     let latlng = {result["lat"], result["lng"]}
 //     addMarker('https://www.unisourceit.com/wp-content/uploads/pin.png', latlng, map, results['comName'])

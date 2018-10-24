@@ -11,8 +11,17 @@ import requests
 
 import os
 import time
+import json
 
+# from passlib.hash import sha_256_crypt
 
+# Assign password; 
+# password = sha256+crypt.encrypt("password")
+
+# When logging in, apply same thing:
+# password = sha256+crypt.encrypt("password")
+
+#######################################################################
 # import hashlib, uuid
 
 # password = 'test_password'
@@ -22,6 +31,15 @@ import time
 # t_sha.update(password+salt)
 # hashed_password = hashlib.sha512(password + salt).hexdigest()
 
+# store hashed password in db
+
+
+# print("PASSWORD: ")
+# print(password)
+# print("SALT: ")
+# print(salt)
+# print("HASHED_PASSWORD: ")
+# print(hashed_password)
 
 
 UPLOAD_FOLDER = 'static/user_pics'
@@ -29,12 +47,11 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+app.config['MAX_CONTENT_LENGTH'] = 16 * 500 * 500
 
 app.secret_key = "secret_key"
 
 app.jinja_env.undefined = StrictUndefined
-
 
 
 @app.route('/')
@@ -56,6 +73,7 @@ def index():
 
     ran_bird = randint(1, len(Bird.query.all()))
     bird = Bird.query.get(ran_bird)
+
     # # print("RANDOMIZED BIRD NUMBER IS.. ")
     # # print(ran_bird)
 
@@ -84,10 +102,12 @@ def login_form():
 
 @app.route('/login', methods=['POST'])
 def login_process():
+
     # Users may use email OR username to log in
     login_id = request.form.get('login_id') #jhacks
     password = request.form.get('password') #jhacks
-
+    # password = hashlib.sha512(password + salt).hexdigest()
+    # The password input is hashed to match hashed pw in db
     user = User.query.filter(User.email == login_id).first()
 
     if not user:
@@ -126,6 +146,8 @@ def registration_process():
     username = request.form.get('reg_username')
     email = request.form.get('reg_email')
     password = request.form.get('reg_pw')
+    # password = hashlib.sha512(password + salt).hexdigest()
+    # The password ENTERED is hashed
     fname = request.form.get('reg_fname')
     lname = request.form.get('reg_lname')
 
@@ -136,7 +158,7 @@ def registration_process():
         # Add user to db
         print("User added!")
         flash("User added!")
-        # password = hashed_password
+
         user = User(username=username, password=password, email=email, fname=fname, lname=lname)
         db.session.add(user)
         db.session.commit()
@@ -149,6 +171,7 @@ def registration_process():
     # return redirect('/users/{}'.format(user.user_id))
     return redirect('/')
     # Redirect to home page
+
 
 @app.route('/logout')
 def logout_process():
@@ -184,13 +207,16 @@ def user_feed():
     # random_num = randint()
     # bird_pic = Bird.query.get(bird.image).first()
 
-    user.image_name = str(user.image_name) + '?{}'.format( str(time.time()) )
+    if user.image_name:
+        user.image_name = str(user.image_name) + '?{}'.format( str(time.time()) )
 
 
     print("USER.IMAGE_NAME IS: ")
     print(user.image_name)
 
     return render_template('my_page.html', user=user)
+
+# https://www.flickr.com/photos/{owner}/{id}
 
 
 @app.route('/users')
@@ -221,15 +247,61 @@ def show_user_settings():
 # @app.route('/user/settings', methods=['POST'])
 # def change_user_settings():
 
+
+# flickr
+# @app.route('/botd_info.json')
+# def get_img_from_api():
+
+#     key = os.environ['flickr_api_key']
+#     secret = os.environ['flickr_secret']
+
+
+#     URL = 'https://api.flickr.com/services/rest/'
+
+#     url_start = 'www.flickr.com/photos/'
+#     params2 = {
+#     'group_id': '1988039@N24'
+#     'image_id': "29999296887"
+#     }
+
+#     image_url = url_start 
+
+
+#     params = {
+#     'method': 'flickr.groups.pools.getPhotos',
+#     'api_key': key,
+#     'group_id': '1988039@N24',
+#     'page': 1,
+#     'per_page': 2,
+#     'format': 'json',
+#     }
+#     r = requests.get(url = URL, params = params)
+
+
+#     text = r.text 
+#     prefix = 'jsonFlickrApi('
+#     text = text[text.startswith(prefix) and len(prefix) : -1]
+#     json_result = json.loads(text)
+    
+#     print(type(json_result))
+    
+#     print(json_result)
+#     return jsonify(text)
+
 @app.route('/birds.json')
 def get_birds_from_api():  
 
-    # lat = request.args.get(id_for_lat)
-    # lng = request.args.get(id_for_lng)
+    lat = request.args.get('globalLat')
+    lng = request.args.get('globalLng')
     key = os.environ['ebird_api_key']
 
-    params = {'lat': 40.712776,
-    'lng': -74.005974, 
+    print("LAT IS: ")
+    print(lat)
+    print("LNG IS: ")
+    print(lng)
+    # 
+    params = {'lat': lat,
+    'lng': lng, 
     'key': key
     }
 
@@ -243,7 +315,7 @@ def get_birds_from_api():
     print("DATA TYPE: ")
     print(type(data))
     print("ZEROTH INDEX OF DATA: ")
-    print(data[0])
+    # print(data[0])
     return jsonify(data)
 
 @app.route('/upload', methods=['POST'])
@@ -299,6 +371,10 @@ def birds_list():
     return render_template("birds_list.html", birds=birds)
 
 
+# @app.route('/update_user_settings', methods=['POST'])
+# def change_user_info():
+
+
 @app.route('/birds/<bird_id>')
 def view_birds(bird_id):
 #     """Show details of a specific bird."""
@@ -313,6 +389,8 @@ def view_birds(bird_id):
     favorite = Favorite.query.all()
     user_fave = Favorite.query.filter((Favorite.user_id == session['user_id']), (Favorite.bird_id == bird_id)).first()
 
+
+    
     if user_fave:
         print("Hi! This bird is a user favorite.")
     else: 
@@ -320,22 +398,56 @@ def view_birds(bird_id):
 
     return render_template("bird_page.html", bird=bird, user_fave=user_fave, user=user)
 
-# @app.route('/birds/<bird_id>', methods=['POST'])
-# def faveUnfaveBird(bird_id):
-#     favorite = 
-#     unfavorite 
+
+# make fave route with post request
+@app.route('/favorite/<bird_id>') #methods=['POST']
+def add_remove_favorite(bird_id):
+    """Adds or removes bird from favorites table"""
+    bird_id = request.args.get('bird_id')
+    print('we are going to favorite a bird with id {}'.format(bird_id))
+    user = User.query.get(session['user_id'])
+
+    # bird_id = request.form.get('') # this is part of the url 
+    # user_id = request.form.get('') # This is the name of the user from session[user_id]
+    # user = request.form.get('') # The user is the user
+    # bird = request.form.get('') # This is the bird whose page you're 
+
+    favorite = Favorite(bird_id=bird_id, user_id=user_id, user=user, bird=bird)
+    favorite = Favorite.query.filter_by(bird_id=bird_id).get()
+
+    # Check that user var matches an entry in db
+    # user = User.query.filter(User.email == email).first()
+    # favorite = Favorite.query.filter(Favorite.bird_id == bird.id).first()
+
+
+    # if not favorite:
+        # add 
+
+        # if text is "favorite"/if button is clicked:
+            # db.session.add(bird_id)
+    # else: # if fave:
+        # 
+
+
+    # db.session.add(favorite)
+    # db.session.delete(favorite)
+    # db.session.commit()
+
+    return redirect('/bird_page')
+
+
 
 @app.route('/map')
 def show_map():
     key = os.environ['google_maps_api_key']
     return render_template('map.html', key=key)
 
-@app.route('/map2')
-def show_map2():
-    key = os.environ['google_maps_api_key']
-    return render_template('map2.html', key=key)
+# @app.route('/map2')
+# def show_map2():
+#     key = os.environ['google_maps_api_key']
+#     return render_template('map2.html', key=key)
 
-@app.route('/userlocation', methods=['POST'])
+@app.route('/user_location', methods=['POST'])
 def getUserLocation():
     """Gets user location from text input (geocoding)"""
 

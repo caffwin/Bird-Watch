@@ -8,10 +8,8 @@
 
 
 
-
-
 {% if 'user_id' not in session %}
-
+    Welcome to Bird Watch! Please log in to use all of our interactive features.
     <a href="/login"><button type="logInButton">Log In</button></a>
 
     <a href="/register"><button type="registerButton">Register</button></a>
@@ -37,7 +35,18 @@
 </img>
 <br>
 
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 
+
+<script>
+
+
+
+
+</script>
+
+<!-- 1 to 500 per_page, default 100 and specify which page you want  -->
+<!-- same 100 birds -->
 
 {% endblock %}
