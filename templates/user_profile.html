@@ -20,7 +20,10 @@ Profile photo:
 {% endif %} 
 
 <br>
+
+<br>
 {{ user.fname }} "{{ user.username}}" {{ user.lname }}'s page!
+<br>
 <br>
 <script>
   "use strict";
@@ -40,7 +43,7 @@ followButton.addEventListener('click', followUnfollow);
 
 </script>
 
-<button id='followAndUnfollow' class='followIcon' onclick='followUnfollow()'>Favorite</button>
+<button id='followAndUnfollow' class='followIcon' onclick='followUnfollow()'>Follow</button>
 
 
 

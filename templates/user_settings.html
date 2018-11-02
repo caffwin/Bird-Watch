@@ -8,11 +8,18 @@
 <h1>Edit User Settings</h1>
 <h2>User ID: {{ user.user_id }}</h2>
 
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0exBi6zdo2_NSyPhtPeaz6VTxwwlabc1P-BlbAQz90L8VWvYhjQ"></img>
+Current profile picture:
 <br>
-<p>** Add button for image uploader here ** </p>
+{% if user.image_name %}
 
-<form action="/upload" method="POST" enctype="images/upload_user_pics" >
+    <img class="user_pic" src="/static/user_pics/{{user.image_name}}"></img>
+
+{% else %}
+
+    <img class="user_pic" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0exBi6zdo2_NSyPhtPeaz6VTxwwlabc1P-BlbAQz90L8VWvYhjQ"></img>
+
+{% endif %} 
+<form action="/upload" method="POST" enctype="multipart/form-data" >
     <span class="btn btn-default btn-file">
         <input type="file" name="upload-image">
     </span>
@@ -22,31 +29,56 @@
 
 <br>
 
-Username: 
-<br>
-<input type='text' name='new_username' value='{{ user.username }}'>
-<br>
-<br>    
-First Name: 
-<br>
-<input type='text' name='new_fname' value='{{ user.fname }}'>
-<br>
-<br>    
-Last Name: 
-<br>
-<input type='text' name='new_lname' value='{{ user.lname }}'>
+Username: {{ user.username }}
 <br>
 <br>
-Email:
+<form action='/update_user_settings' method='POST'>
+  
+    First Name (max 16 chars): 
+    <br>
+    <input type='text' name='upd_fname' value='{{ user.fname }}'>
+    <br>
+    <br>    
+    Last Name (max 16 chars): 
+    <br>
+    <input type='text' name='upd_lname' value='{{ user.lname }}'>
+    <br>
+    <br>
+    Email:
+    <br>
+    <input type='text' name='upd_email' value='{{ user.email }}'>
+    <br>
+    <br>
+    Username (max 16 chars):
+    <br>
+    <input type='text' name='upd_username' value='{{ user.username }}'>
+    <br>
+    <br>
+    Reset Password?
+    <br>
+    <br>
+    Current Password:
+    <br>
+    <input type='password' name='check_pw'>
+    <br>
+    <br>
+    New Password:
+    <br>
+    <input type='password' name='upd_pw'>
+    <br>
+    Confirm New Password:
+    <br>
+    <input type='password' name='upd_pw2'>   
+    <br>
+    <br>
+    <input type="submit" value="Submit Changes" class="settings-update">
+</form>
 <br>
-<input type='text' name='new_email' value='{{ user.email }}'>
+<br>
+
 
 <br>
-<br>
-<input type='text' name='new_username'>
-<input type='password' name='new_pw'>
-<input type='text' name='new_email'>
 
-<br>
-<input type="submit" value="Submit Changes" class="settings-update">
+<!-- on click, pass information from form -->
+
 {% endblock %}

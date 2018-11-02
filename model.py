@@ -11,8 +11,8 @@ class Bird(db.Model):
     bird_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     common_name = db.Column(db.String(50), nullable=False)
     scientific_name = db.Column(db.String(50), nullable=False)
+    species_code = db.Column(db.String(20), nullable=False)
     habitat = db.Column(db.String(50), nullable=True)
-    # number = db.Column(db.Integer, nullable=True)
     image = db.Column(db.String(500), nullable=True)
     # botd_date = db.Column(db.DateTime, nullable=True)
 
@@ -32,7 +32,7 @@ class User(db.Model):
     fname = db.Column(db.String(50))
     lname = db.Column(db.String(50))
     email = db.Column(db.String(50))
-    password = db.Column(db.String(50))
+    password = db.Column(db.String(150))
     image_name = db.Column(db.String(150))
 
 
@@ -129,7 +129,7 @@ def example_data():
     # A function that creates a user and adds it to the database.
     # A function that creates a favorite and adds it to the database.
     # A function that creates a follower/followee pair and adds it to the database.
-
+    pass 
     # Bird.query.delete()
 
     # # game = Game(game_id, name, description)
@@ -148,9 +148,9 @@ def example_data():
 
 # Helper Functions
 
-def connect_to_db(app):
+def connect_to_db(app, db_uri='postgresql:///birdwatch'):
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///birdwatch'
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
     db.init_app(app)

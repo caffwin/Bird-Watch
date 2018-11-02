@@ -40,10 +40,11 @@ def load_birds():
 
     for row in open("seed_data/birds_data.txt"):
         row = row.rstrip()
-        scientific_name, common_name, image = row.split("|")
+        scientific_name, common_name, species_code, image = row.split("|")
 
         bird = Bird(scientific_name = scientific_name.strip(),
                     common_name = common_name.strip(),
+                    species_code = species_code,
                     image = image.strip())
 
         db.session.add(bird)

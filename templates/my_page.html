@@ -29,7 +29,11 @@
 </form>
 
 <br>
-
+<form action="/user_settings">
+    <input type="submit" value="Edit Settings" />
+</form>
+<br>
+<br>
 <p>First Name: {{ user.fname }} 
 <br>    
 Last Name: {{ user.lname }} 
@@ -50,14 +54,14 @@ Email: {{ user.email }}</p>
 {% endfor %}
 
 <br>
-<button id='faveOnOff' class='faveText' onclick='faveUnfave()'>Favorite</button>
+<button id='delFave' onclick='faveUnfave()'>Remove</button>
 <!-- You can only use this button if logged in, and fave exists -->
 
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script>
   "use strict";
 
-var delButton = document.querySelector('.delText')
+var delButton = document.querySelector('#delFave')
 
 
 </script>
