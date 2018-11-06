@@ -2,13 +2,13 @@
 
 {% block content %}
 
-<h1>Birds List</h1>
+<h1>Bird Hall of Fame</h1>
 
-  <h2>Birds</h2>
+  <h3>Here are all of the birds that have been favorited by users!</h2>
 
     {% for bird in birds %}
   
-        <a href="/birds/{{ bird.bird_id }}">
+        <a href="/birds/{{ bird.species_code }}">
         
           {{ bird.common_name }}</a> ({{ bird.scientific_name }})
         <br>

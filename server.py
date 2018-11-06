@@ -9,14 +9,11 @@ from model import Bird, User, Favorite, Checklist, connect_to_db, db
 from sqlalchemy import update # Might not need this
 
 import requests 
-
+import re
 import os
 import time
 import json
-
 import bcrypt
-
-print(bcrypt)
 
 
 UPLOAD_FOLDER = 'static/user_pics'
@@ -27,7 +24,6 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 500 * 500
 
 app.secret_key = "secret_key"
-
 app.jinja_env.undefined = StrictUndefined
 
 
@@ -54,17 +50,13 @@ def index():
     # # print("RANDOMIZED BIRD NUMBER IS.. ")
     # # print(ran_bird)
 
-    # print("BIRD IS..")
-    # print(bird)
-    # print(type(bird)) # bird is a class
-
     user = None
 
     if 'user_id' in session:
         user = User.query.get(session['user_id'])
         print('You are logged in as ' + str(session['user_id']))
         flash('You are now logged in!')
-        print(user.fname)
+        # print(user.fname)
 
     else:
         print('No one is currently logged in.')
@@ -95,38 +87,37 @@ def login_form():
 def login_process():
 
     # Users may use email OR username to log in
-    login_id = request.form.get('login_id') #jhacks
+    username = request.form.get('login_id') #jhacks
     password = request.form.get('password') #jhacks
 
-
-    user = User.query.filter(User.email == login_id).first()
+    user = User.query.filter(User.email == username).first()
 
     if not user:
-        user = User.query.filter(User.username == login_id).first()
+        user = User.query.filter(User.username == username).first()
+        print("User doesn't exist")
     
     if user:
-        check_pw = check_password(password, user.password)
-        # if password = hashed_password
-        if check_pw:
-        # if user.password == password:
-            print("Password matches username!")
-            flash("Logged in")
-            session['user_id'] = user.user_id # saves to session
-            # return redirect('/users/{}'.format(user.user_id))
-            return redirect('/users/my_page')
-            # Redirect here instead for personal feed
-        # elif user.password == None:
-        #     return redirect('/')
+        if len(password) > 8 & len(password) < 17: 
+            check_pw = check_password(password, user.password)
+            # if password = hashed_password
+            if check_pw:
+            # if user.password == password:
+                print("Password matches username!")
+                flash("You are now logged in!")
+                session['user_id'] = user.user_id # saves to session
+                # return redirect('/users/{}'.format(user.user_id))
+                return redirect('/users/my_page')
+                # Redirect here instead for personal feed
+            # elif user.password == None:
+            #     return redirect('/')
 
         else: 
-            print("Password does not match user!")
-            flash("Incorrect Password")
+            print("Please enter a password between 8-16 characters!")
             return redirect('/')
             # This happens when username typed, password blank
 
     else: 
         print("User not found! Please try again, or register.")
-        flash("User not found! Please try again, or register.")
         return redirect('/')
 
 
@@ -142,9 +133,21 @@ def registration_process():
     email = request.form.get('reg_email')
     password = request.form.get('reg_pw')
     hashed_pw = get_hashed_password(password)
+    regex_email = re.findall(r'[^@]+@[^@]+\.[^@]+', email)
+    #doesn't handle the case of spaces
 
     # check to make sure user doesn't already exist before
     # allowing new entry to be made in DB
+
+    regex_username = re.match("^[a-zA-Z0-9_.-]+$", username)
+    # must be alphanumeric
+    # Returns none if strange characters entered or space in name
+    # Returns match object if matching string 
+
+    # if regex_username == None: # if it's something
+
+    # if len(password) > 8 & len(password) < 17:
+    #     valid_password = password
 
     fname = request.form.get('reg_fname')
     lname = request.form.get('reg_lname')
@@ -153,26 +156,36 @@ def registration_process():
     user = User.query.filter(User.email == email).first()
 
     if user == None: # If user doesn't exist in db
+        # if regex_email: # if regex_username is valid
         # Add user to db
         print("User added!")
         flash("User added!")
-
-        if username.isalnum() == True:
+        print(regex_username) # evaluated to none when "sdfosdijf  e9" entered
+        if regex_username is not None:
+            print("REGEX USERNAME: ")
+            print(regex_username)
             print("Username alphanumeric!")
             flash("Username alphanumeric!")
+        # make sure password also valid
+        # if username.isalnum() == True:
+            print("REGEX EMAIL: ")
+            print(regex_email)
+            if regex_email is not None: 
+                print("Regex'd email is valid!")
         # user = User(username=username, password=hashed_pw, email=email, fname=fname, lname=lname)
-            user = User(username=username, password=hashed_pw, email=email, fname=fname, lname=lname)
-            db.session.add(user)
-            db.session.commit()
-            session['user_id'] = user.user_id
+                user = User(username=username, password=hashed_pw, email=email, fname=fname, lname=lname)
+                db.session.add(user)
+                db.session.commit()
+                session['user_id'] = user.user_id
 
         else:
-            print("Please re-enter an alphanumeric password between 8-16 letters!")
+            print("One or more fields are invalid! Please try again.")
             return redirect('/register')
     else: # user already exists in db
         print("This user already exists! Please log in.")
         flash("This user already exists! Please log in.")
 
+    flash("You are now registered! Please enjoy all of our features.")
     return redirect('/')
     
 
@@ -187,26 +200,8 @@ def logout_process():
 def user_feed():
     """Shows user's page (private), only viewable if logged in as user"""
 
-    # print("User ID " + str(user.user_id))
-
-    # print("User ID from favorites " + str(user.favorites.user_id))
-    # randomize a bird from the birds list and return
-    # the *th element (url)
-
-    # total_birds = len(Bird.query.all())
-    # print(total_birds)
-
-    # for i in range(len(total_birds))
-    # random_num = randint()
-    # bird_pic = Bird.query.get(bird.image).first()
-    # if user == None:
-    #     return render_template('user_oops.html')
-
-    # write edge case for user trying to access this page without being logged in
-
     if 'user_id' not in session:
-
-        ## if something, get flash messages from ratings lab for flashes
+        flash("No user is logged in!")
         return render_template('user_oops.html')
 
     user = User.query.get(session['user_id'])
@@ -215,8 +210,15 @@ def user_feed():
         if user.image_name:
             user.image_name = str(user.image_name) + '?{}'.format( str(time.time()) )
 
-    print("USER.IMAGE_NAME IS: ")
-    print(user.image_name)
+    # user = User.query.get(session['user_id'])
+    # favorite = Favorite.query.get().all()
+
+    # get_bird_data(species_code)
+    # bird_common_name = bird_data[0]['comName']
+    # bird_photo_id = get_photos_by_text(bird_common_name)
+    # bird_photo = get_image_flickr(bird_photo_id)
+    # print("USER.IMAGE_NAME IS: ")
+    # print(user.image_name)
 
     return render_template('my_page.html', user=user)
 
@@ -268,13 +270,6 @@ def get_birds_from_api():
 
     key = os.environ['ebird_api_key']
     
-    print("Request args: ")
-    print(request.args)
-    print("LAT IS: ")
-    print(lat)
-    print("LNG IS: ")
-    print(lng)
-    
     params = {'lat': lat,
     'lng': lng 
     }
@@ -285,15 +280,8 @@ def get_birds_from_api():
 
     URL = 'https://ebird.org/ws2.0/data/obs/geo/recent/'
     r = requests.get(url = URL, params = params, headers = headers)
-
-    print(type(r))
     data = r.json()
-    print("DATA: ")
-    print(data)
-    print("DATA TYPE: ")
-    print(type(data))
-    print("ZEROTH INDEX OF DATA: ")
-    # print(data[0])
+
     return jsonify(data)
 
 
@@ -316,7 +304,6 @@ def upload_file():
     print(file)
     print("FILENAME IS:")
     print(filename)
-
 
     image_name = str(session['user_id']) + '_profile.jpg'
 
@@ -358,25 +345,28 @@ def change_user_info():
     new_email = request.form.get('upd_email')
     new_pw = request.form.get('upd_pw')
 
-    # if not new_pw: # if password field left blank..
-    #     # don't update it 
-    
-    # if the "updated" value is the same as old value, db is smart and won't update
-    if new_fname.isalnum():  #if an entry in our request.args dict exists:
-        new_fname.strip()
+    if new_fname.strip().isalpha():  #if an entry in our request.args dict exists:
+        # new_fname.strip()
         new.fname.lower()
         new.fname.title()
         user.fname = new_fname
+    else: 
+        flash("Please enter a valid first name!")
 
-    if new_lname:
-        new_lname.strip()
+    if new_lname.strip().isalpha():
+        # new_lname.strip()
         new.lname.lower()
         new.lname.title()
         user.lname = new_fname
+    else: 
+        flash("Please enter a valid last name!")
 
-    if new_username:
-        new_username.strip()
+
+    if new_username.strip().isalum():
+        # new_username.strip()
         use.username = new_username
+    else: 
+        flash("Please enter a valid first name!")
 
     if new_email:
         new_email.strip()
@@ -391,12 +381,15 @@ def change_user_info():
 
 
     # ask for old pw too, if correct and
-    # if new_pw: 
-    #     if new_pw == new_pw2: 
-    #         pass
-    #         # update
-    #     else: 
-    #         print("The passwords don't match! Try again")
+    if new_pw: 
+        if new_pw == new_pw2: 
+            new_hashed_pw = get_hashed_password(new_pw)
+            user.password = new_hashed_pw
+            db.session.commit()
+
+        else: 
+            print("The passwords don't match! Try again")
+            flash("The passwords don't match! Try again")
 
     user = User.query.get(session['user_id'])
 
@@ -405,16 +398,14 @@ def change_user_info():
     print("USER'S FIRST NAME IS: ")
     print(new_fname)
 
-    user.email = new_email
-    user.fname = new_fname
-    user.lname = new_lname
-    new_hashed_pw = get_hashed_password(new_pw)
+    # user.email = new_email
+    # user.fname = new_fname
+    # user.lname = new_lname
+    # new_hashed_pw = get_hashed_password(new_pw)
 
     user.username = new_username
     print("USER'S NEW FNAME IS: ")
     print(user.username)
-    # user.password = new_hashed_pw
-
 
     db.session.commit()
 
@@ -426,75 +417,40 @@ def get_bird_code_and_name():
     """Gets data of species_code and common name from map.html template"""
 
     species_code = request.args.get('speciesCode')
-    # return render_template('/birds/' + species_code) returns this:
-    # http://localhost:5000/get_bird_page_data?speciesCode=wesgul
     return redirect('/birds/' + species_code)
 
 
-@app.route('/test_xc')
-def get_xenocanto_json():
+def get_xenocanto_json(comName):
+    """Takes in a common name, and returns json of all sound clips.
+    Returns either the link of an available sound clip, or None"""
 
-    # xc_URL = 'https://www.xeno-canto.org/api/2/recordings'
+    xc_URL = 'https://www.xeno-canto.org/api/2/recordings'
 
-    xc_URL_canada = 'https://www.xeno-canto.org/api/2/recordings'
+    xc_params = {
+    'query': comName
+    }
 
+    r = requests.get(url=xc_URL, params=xc_params)
+    xc_data = r.json()
 
+    if len(xc_data['recordings']) > 0:
+        print("length of recordings is more than zero")
+        xc_soundclip = xc_data['recordings'][0]['url'] #may be out of range       
+        print("XC SOUNDCLIP: ")
+        print(xc_soundclip) 
+        print("XC SOUNDCLIP LENGTH: ")
+        print(len(xc_soundclip))
+        print("XC SOUNDCLIP TYPE: ")
+        print(type(xc_soundclip)) # string
+        return xc_soundclip
 
-    for i in range(1, 16):
-
-        xc_canada_params = {
-        'query': 'cnt:canada',
-        'page': i
-        }
-        r = requests.get(url=xc_URL_canada, params=xc_canada_params)
-        xc_data_canada = r.json()
-        print("CANADA BIRD DATA: ")
-        print(xc_data_canada['recordings'][0])
-        print(xc_data_canada['recordings'][0]['url']) # is the actual url as str
-        # bird_object = xc_data_canada['recordings'][0]['en']
-        # print(bird_object) 
-
-
-    # xc_params = {
-    # 'query': 'cnt:brazil'
-    # }
-
-    # r = requests.get(url=xc_URL, params=xc_params)
-    # xc_data = r.json()
-
-    # print(xc_data)
-    # print(type(xc_data))
-
-    # name_en = xc_data['re.cordings'][0]['en']
-
-    # for i in range(len(xc_data['recordings'])):
-    #     print("XC DATA incremented index EN: ")
-    #     print(xc_data['recordings'][i]['en'])
-
-    # print(name_en)
-
-    return render_template('text_xc.html')
+    else: 
+        print("Else statement entered")
+        return None
 
 
-@app.route('/birds/<species_code>')
-def view_birds(species_code):
-#     """Show details of a specific bird."""
-    
-    # Will sometimes get this error, assuming there aren't enough photo IDs to populate list
-    # json.decoder.JSONDecodeError
-    # json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
-
-    # user = None
-
-    # if user == None:
-    #     return render_template('user_oops.html')
-
-    # user = User.query.get(session['user_id'])
-
-    # user = User.query.get(session['user_id'])
-    favorite = Favorite.query.all()
-
-    print(species_code)
+def get_bird_data(species_code):
+    """Gets data of a specific bird through eBird's API with a given species code"""
 
     ebird_URL = 'https://ebird.org/ws2.0/ref/taxonomy/ebird'
 
@@ -508,15 +464,34 @@ def view_birds(species_code):
     'X-eBirdApiToken': os.environ['ebird_api_key']
     }
 
-    # https://ebird.org/ws2.0/ref/taxonomy/ebird?fmt=json&locale=en&species=coohaw&key=o42fhp5kl3t3
-
-    r = requests.get(url = ebird_URL, params = ebird_params, headers = headers)
+    r = requests.get(url=ebird_URL, params=ebird_params, headers=headers)
     bird_data = r.json()
-    print("r")
-    print(r)
+
+    return bird_data #bird_data is a single bird obj
+
+
+@app.route('/birds/<species_code>')
+def view_birds(species_code):
+    """Show details of a specific bird."""
+
+    ebird_URL = 'https://ebird.org/ws2.0/ref/taxonomy/ebird'
+
+    ebird_params = {
+        'fmt': 'json',
+        'locale': 'en',
+        'species': [species_code]
+    }
+
+    headers = {
+    'X-eBirdApiToken': os.environ['ebird_api_key']
+    }
+
+    r = requests.get(url=ebird_URL, params=ebird_params, headers=headers)
+    bird_data = r.json()
     print("BIRD DATA")
-    print(bird_data) #This is an ebird object with coohaw as the species name 
-    print(type(bird_data)) # this is a list?????????
+    print(bird_data) 
+    print("BIRD DATA TYPE: ")
+    print(type(bird_data)) 
 
     if not bird_data:
         return render_template('bird_oops.html')
@@ -527,17 +502,32 @@ def view_birds(species_code):
     bird_photo_id = get_photos_by_text(bird_common_name)
     bird_photo = get_image_flickr(bird_photo_id)
     # bird_photo is a list of the four photo URLs under the specified size
+    print("BIRD COMMON NAME IS: ")
+    print(bird_common_name)
+    print(type(bird_common_name))
+    birds_in_db = Bird.query.all() 
+    bird_obj_comname = bird_obj['comName'] 
 
-    # print("BIRD SCIENTIFIC NAME IS: ", bird_sci_name)
-    # print("BIRD COMMON NAME IS: ", bird_common_name)
+    bird = Bird.query.filter(Bird.common_name == bird_obj_comname).first()
 
-    # check_user_favorite
+    favorite = None
 
-    # if user fave exists: 
-        # add_user_favorite(bird_common_name, bird_sci_name)
-  
+    if bird:
+        favorite = Favorite.query.filter(Favorite.user_id==session['user_id'], Favorite.bird_id==bird.bird_id).first() # find first entry with this
 
-    return render_template("bird_page.html", bird=bird_obj, bird_photo=bird_photo)
+    print("Favorite is: " + str(favorite))
+
+    print("Bird common name: ")
+    print(bird_common_name)
+    xc_url = get_xenocanto_json(bird_common_name)
+    
+    print("XC URL IS: ")
+    print(xc_url)
+
+    flash("Navigated to bird page!")
+    # potential error: json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+    return render_template("bird_page.html", bird=bird_obj, bird_photo=bird_photo, favorite=favorite, xc_url=xc_url)
 
 
 def get_ebird_info(species_code):
@@ -584,9 +574,9 @@ def get_photos_by_text(text):
     r = requests.get(url = photo_by_title_URL, params = title_params)
     photo_data = r.json()
 
-    print("PHOTO DATA AND TYPE: ")
-    print(photo_data)
-    print(type(photo_data)) # dict
+    # print("PHOTO DATA AND TYPE: ")
+    # print(photo_data)
+    # print(type(photo_data)) # dict
     # photo_id = photo_data['photos']['photo'][4]['id']
 
     photo_ids = []
@@ -596,19 +586,38 @@ def get_photos_by_text(text):
         photo_ids.append(photo)
 
     # photo_ids is a list of four photo IDs from the Flickr JSON file
-    print("PHOTO IDS: ")
-    print(photo_ids)
     return photo_ids
+
+def get_bird_pic_flickr(photo_id):
+    """Gets one actual photo from flickr's API based on photo ID,
+    this is the actual image!"""
+
+    actual_image_URL = 'https://api.flickr.com/services/rest/'
+    photo_url = []
+    
+    params = { 'method': 'flickr.photos.getSizes',
+    'api_key': os.environ['flickr_api_key'],
+    'photo_id': photo_id,
+    'format': 'json',
+    'nojsoncallback': '1',
+    }
+    
+    r = requests.get(url=actual_image_URL, params=params)
+    photo_data = r.json()
+
+    # Number index specifies desired size dimension 
+    bird_src = photo_data['sizes']['size'][3]['source']
+    # bird_src is a list of one item - must be a list 
+    photo_url.append(bird_src)
+
+    return photo_url
 
 
 def get_image_flickr(photo_ids):
-    """Get actual photo based on photo ID"""
+    """Get four photos based on photo ID"""
 
     actual_image_URL = 'https://api.flickr.com/services/rest/'
     photo_urls = []
-
-    # https://api.flickr.com/services/rest/?method=flickr.photos.getSizes&api_key=5951cc9bf3af0c29009e5d4c3a1c249d&photo_id=43857180190&format=json&nojsoncallback=1&auth_token=72157672986552207-a3b472cc198424ff&api_sig=e5dc7aab0bf8f33e438232ed256d8f71
-    # https://api.flickr.com/services/rest/?method=flickr.photos.getSizes&api_key=0381854dcbbad40ac9a09a07365cbd6a&photo_id=43857180190&format=json&nojsoncallback=1&auth_token=72157672986552207-a3b472cc198424ff&api_sig=e5dc7aab0bf8f33e438232ed256d8f71
 
     # photo_ids is a list 
     for photo_id in photo_ids:
@@ -628,51 +637,88 @@ def get_image_flickr(photo_ids):
 
         photo_urls.append(bird_src)
 
-    print("PHOTO URLS LIST: ")
-    print(photo_urls)
-    print("TYPE OF PHOTO URLS: ")
-    print(type(photo_urls))
     # photo_urls is a list of four URLs that correspond to the IDs from get_photos_by_text
     return photo_urls
 
-#     bird = Bird.query.get(bird_id) 
-#     user = User.query.get(session['user_id'])
-#     # print("THE USER IS: ")
-#     # print(user)
-#     # print(user.user_id)
-#     # returns user object
-#     # bird = Bird.query.get(bird_id) # bird by bird_id
-#     # print("THE BIRD IS:")
-#     # print(bird)
 
 @app.route('/add_fave', methods=['POST'])
-def add_user_favorite(common_name, sci_name):
+def add_user_favorite():
+    """Adds bird to database if not already in database,
+    Adds species code/user id pair to favorites if not already in database """
 
-    bird_common_name = request.forms.get('common_name')
-    bird_sci_name = request.forms.get('sci_name')
+    common_name = request.form.get('comName')
+    scientific_name = request.form.get('sciName')
+    species_code = request.form.get('speciesCode')
+    # get bird by matching common name, could also match species code
+    bird = Bird.query.filter(Bird.common_name == common_name).first()
+    user_id = session['user_id']
+    user = User.query.get(session['user_id']) 
 
-    bird = Bird(common_name=bird_common_name, scientific_name=bird_sci_name)
+    photo_id = get_photos_by_text(common_name) # this is a photo ID
+    image_url = get_bird_pic_flickr(photo_id)
+    image_index = image_url[0]
+    print("PHOTO ID IS: ")
+    print(photo_id)
+    print("IMAGE URLS IS: ")
+    print(image_url)
+    print(type(image_url))
+
+    if not bird:
+        print("Bird does not exist in db!")
+        bird = Bird(common_name=common_name, scientific_name=scientific_name, species_code=species_code, image=image_index)
+        db.session.add(bird)
+        db.session.commit()
+        print("Bird added, yay!")
+
+    favorite = Favorite(user_id=session['user_id'], bird_id=bird.bird_id)
+
+    db.session.add(favorite)
     db.session.commit()
+
+    flash("Yay, added!")
+    return "Yay! Added."
+
 
 @app.route('/remove_fave', methods=['POST'])
 def remove_user_favorite():
+    # print("speciesCodes are: " + str(request.form.get('speciesCodes')))
+
+    species_code = request.form.get('speciesCode')
+
+    remove_favorite(species_code)
+    # bird = Bird.query.filter(Bird.species_code == species_code).first()
+
+    # check_favorite = Favorite.query.filter((Favorite.user_id == session['user_id']), (Favorite.bird_id == bird.bird_id)).first()
+
+    # db.session.delete(check_favorite)
+    # db.session.commit()
+
+    return "Removed fave!"
 
 
+def remove_favorite(species_code):
 
-    db.session.delete(bird)
+    bird = Bird.query.filter(Bird.species_code == species_code).first()
+    check_favorite = Favorite.query.filter((Favorite.user_id == session['user_id']), (Favorite.bird_id == bird.bird_id)).first()
 
-def check_user_favorite():
-    """Checks if entry for a specific bird/user pair exists in the favorites table"""
-    favorite = Favorite.query.all()
+    db.session.delete(check_favorite)
+    db.session.commit()
+    return "Removed!"
 
-    # we need to know the user id and check if the common name exists, the bird ID is the comName
-    if favorite:
-        print("This bird is a user favorite.")
-    else: 
-        print("USER DOES NOT LIKE THIS BIRD. SHAME ON THEM.")
 
-    pass
-#     return render_template('bird_page.html', species=species_code)
+@app.route('/remove_faves', methods=['POST'])
+def remove_numerous_faves():
+    species_codes = request.form.get('speciesCodes')
+    species_codes = json.loads(species_codes)
+
+    for code in species_codes:
+        remove_favorite(code)
+        print("removed" + code)
+
+    print("here are the species codes: ")
+    print(species_codes)
+    # return redirect('/users/my_page')
+    return "Removed!"
 
 
 # make fave route with post request
@@ -701,6 +747,42 @@ def add_remove_favorite(bird_id):
     return "Success!"
 
 
+
+# API info
+# make dict {
+#     'key': value,
+# }
+
+# const options = {
+    
+# };
+# can add scales (dict to go to xAxes: sicts to go to ticks > beginAtZero)
+
+# in js: let ctx_donut = $("#canvas_id").get'0).getContext('2D') #graph will be where the chart shows up
+# make get request to server
+# $.get('/route.json'), function (data) {
+#     let myDonutChart = new Chart(ctx_donut, {
+#         type: "donut',
+#         data: data,
+#         options: options
+#         });
+# }
+
+# var ctx = document.getElementById("myChart");
+# var myChart = new Chart(ctx, {
+#   type: 'line',
+#   data: {
+#     labels: years,
+#     datasets: [
+#       { 
+#         data: africa
+#       }
+#     ]
+#   }
+# });
+
+
+
 @app.route('/map')
 def show_map():
 
@@ -719,6 +801,49 @@ def getUserLocation():
 
     return redirect('/map')
 
+
+@app.route('/get_user_id')
+def get_user_info():
+    """Takes in a username and returns a user id"""
+    search_for_username = request.args.get('searchFor')
+    print("Search for username is: ")
+    print(search_for_username)
+    user = User.query.filter(User.username == search_for_username).first()
+    print(user)
+    print(type(user))
+    username_id = user.user_id
+
+    if user: 
+        print("User exists! Here is their page: ")
+        return render_template('/users/' + str(username_id))
+    else: 
+        return redirect('/users_list')
+    
+
+
+@app.route('/search_for_user')
+def get_user_from_search():
+    search_for_username = request.args.get('searchFor')
+    # user = User.query.all()
+    print("Search for this username: ")
+    print(search_for_username)
+    
+    
+    
+
+
+
+# @app.route('/users/<user_id>')
+# def show_user_profile(user_id):
+#     """Shows specific user's profile"""
+#     user = User.query.get(user_id)
+#     return render_template('user_profile.html', user=user)
+
+
+@app.route('/about')
+def get_about_page():
+    """About Page"""
+    return render_template('about.html')
 
 if __name__ == "__main__":
 

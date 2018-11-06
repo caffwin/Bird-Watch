@@ -18,13 +18,14 @@ def load_users():
 
     for row in open("seed_data/users_data.txt"):
         row = row.rstrip()
-        fname, lname, username, email, password = row.split("|")
+        fname, lname, username, email, password, description = row.split("|")
 
         user = User(fname = fname.strip(),
                     lname = lname.strip(),
                     username = username.strip(),
                     email = email.strip(),
-                    password = password.strip())
+                    password = password.strip(),
+                    description = description.strip())
 
         db.session.add(user)
 
@@ -94,8 +95,6 @@ def load_favorites():
 # def following():
 #     """Load favorited pairs into database."""
 #     print("Following")
-
-#     # for each row 
 
 
 if __name__ == "__main__":

@@ -7,37 +7,37 @@
 
 <h1>Bird Details</h1>
 <h2>{{ bird.comName }}</h2>
-
+<p id='desc'>{{ bird.comName }}'s scientific name is {{ bird.sciName }}!</p>
 
 {% if bird_photo %}
-  <img src={{ bird_photo[0] }}></img>
-  <img src={{ bird_photo[1] }}></img>
+  <img class='cont-rounded' src={{ bird_photo[0] }}></img>
+  <img class='cont-rounded' src={{ bird_photo[1] }}></img>
   <br>
-  <img src={{ bird_photo[2] }}></img>
-  <img src={{ bird_photo[3] }}></img>
+  <img class='cont-rounded' src={{ bird_photo[2] }}></img>
+  <img class='cont-rounded' src={{ bird_photo[3] }}></img>
 {% else %}
 
   <img src="https://i.pinimg.com/originals/94/78/b5/9478b558a1136e2f9958b458ea2e6dd8.jpg"></img>
 {% endif %}
 
+
 <br>
-<button id='faveOnOff' class='faveText'>Favorite</button>
-
-
-<p>{{ bird.comName }}'s scientific name is {{ bird.sciName }}!</p>
-
-
-<b>Bird info:</b> <span id='birdInfo'>Unknown</span>
-
-
-<p>Bird song clip (if it exists):</p>
-
-<audio controls>
-  <source src="https://www.xeno-canto.org/277771" type="audio/ogg">
-Your browser does not support the audio element.
-</audio>
-
-
+<button id='faveOnOff' class='fave-text' data-com-name="{{ bird.comName }}" data-sci-name="{{ bird.sciName }}" data-species-code="{{ bird.speciesCode }}">
+{% if favorite %}
+  Unfavorite
+{% else %}
+  Favorite
+{% endif %}
+</button>
+<br>
+<br>
+{% if xc_url %}
+<a href='{{ xc_url }}'>
+Click here for this bird's song clip <img class='small-icon' src='/static/audio_icon.png'></img></a>
+{% else %}
+There is no audio clip for this bird!
+{% endif %}
+<br>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
 <script>
@@ -54,23 +54,23 @@ function showResult(result) {
 function addRemoveFave(evt) {
   console.log('I pressed the button');
 
-  if (faveButton.innerHTML === 'Favorite') {
+  let data = $('#faveOnOff').data();
+  let text = faveButton.innerHTML.trim()
+
+  if (text === 'Favorite') {
+
+    console.log("BUTTON SAID FAVORITE BEFORE CLICC")
     faveButton.innerHTML = 'Unfavorite';
-    $.post('/remove_fave', 
-      {
-        'common_name': '{{ bird.comName }}',
-        'sci_name': '{{ bird.sciName }}',
-        'bird_id': bird_id
-      }, 
+    $.post('/add_fave',
+      data, 
       showResult);
   }
   else {
+
+    console.log("BUTTON SAID UNFAVORITE BEFORE CLICC")
     faveButton.innerHTML = 'Favorite';
-    $.post('/add_fave', 
-      {
-        'common_name': '{{ bird.comName }}',
-        'sci_name': '{{ bird.sciName }}' 
-      }, 
+    $.post('/remove_fave', 
+      data,
       showResult);
   }
 }
@@ -79,8 +79,5 @@ function addRemoveFave(evt) {
 faveButton.addEventListener('click', addRemoveFave);
 
 </script>
-
-
-
 
 {% endblock %}

@@ -1,11 +1,10 @@
-<h1>User {{ user.user_id }}'s profile page</h1>
-<h2>This is public</h2>
-
 {% extends 'base.html' %}
 
-{% block title %}User {{ user.user_id }}'s Profile{% endblock %}
 
 {% block content %}
+<h1>User {{ user.user_id }}'s profile page</h1>
+<h5>(This is public)</h5>
+<br>
 Profile photo:
 <br>
 
@@ -28,33 +27,34 @@ Profile photo:
 <script>
   "use strict";
 
-function followUnfollow(evt) {
-  console.log('thissiissaTESTTestt**');
-  var followButton = document.querySelector('.followIcon');
-  if (followButton.innerHTML === 'Follow') {
-    followButton.innerHTML = 'Unfollow';
-  }
-  else {
-    followButton.innerHTML = 'Follow';
-  }
-}
+// function followUnfollow(evt) {
+//   var followButton = document.querySelector('.followIcon');
+//   if (followButton.innerHTML === 'Follow') {
+//     followButton.innerHTML = 'Unfollow';
+//   }
+//   else {
+//     followButton.innerHTML = 'Follow';
+//   }
+// }
 
-followButton.addEventListener('click', followUnfollow);
+// followButton.addEventListener('click', followUnfollow);
 
 </script>
 
-<button id='followAndUnfollow' class='followIcon' onclick='followUnfollow()'>Follow</button>
+{% for favorite in user.favorites %}
+    <br>
+    <img src={{ favorite.bird.image }}></img>
+    <br>
 
+{% endfor %}
 
-
-<br>
-<br>
-<br>
+<!-- <button id='followAndUnfollow' class='followIcon' onclick='followUnfollow()'>Follow</button> -->
 
 <br>
 Description
 <br>
 Favorites list
+<br>
 <br>
 
 

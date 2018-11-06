@@ -34,12 +34,13 @@ class User(db.Model):
     email = db.Column(db.String(50))
     password = db.Column(db.String(150))
     image_name = db.Column(db.String(150))
+    description = db.Column(db.String(700))
 
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return 'User ID: {}, First Name: {}, Last Name: {}'.format(self.user_id, self.fname, self.lname)
+        return 'User ID: {}, First Name: {}, Last Name: {}, Username: {}'.format(self.user_id, self.fname, self.lname, self.username)
 
 
 class Favorite(db.Model):

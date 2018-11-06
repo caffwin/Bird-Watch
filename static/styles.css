@@ -1,0 +1,213 @@
+.page-footer {
+    position: relative;
+    width: 100%;
+    bottom: 0px;
+}
+
+.footer-font {
+    font-family: 'Playfair Display', serif;
+    font-family: 'Nanum Gothic', sans-serif;
+    font-size: 12px;
+    text-align: center;
+}
+
+
+
+body.container {
+    background: url('/images/bird_photos/hr_pics/barnowl.jpeg');
+    background-size: cover;
+}
+
+#greeting {
+    font-family: 'Playfair Display', serif;
+    font-style : italic;
+}
+
+
+/*#id {
+    font-family: 'Playfair Display', serif;
+    font-style : italic;
+}*/
+
+h1{
+    font-family: 'Playfair Display', serif;
+    font-family: 'Nanum Gothic', sans-serif;
+}
+
+/*
+h1 {
+    font-family: 'Playfair Display', serif;
+    font-family: 'Nanum Gothic', sans-serif;
+}*/
+.display-bird-pic {
+    background: no-repeat center center;
+    position: relative;
+    height: 200px;
+    width: 200px;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.small-icon{
+    height: 15px;
+    width: 15px;
+}
+
+.fave-text{
+    color: black;
+    border-radius: 5px;
+}
+
+.cont-rounded {
+/*    background: no-repeat center center;
+    position: relative;*/
+/*    height: 220px;
+    width: 220px;*/
+    /*overflow: hidden;*/
+    /*border-radius: 50%;*/
+}
+
+
+/*This is where the cover scroll effect CSS starts*/
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: Georgia, serif;
+  font-size: 100%;
+  line-height: 1.6;
+}
+
+body {
+  background-color: #fafafa;
+  color: #444;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: sans-serif;
+  line-height: 1.2;
+}
+
+.content {
+  height: 100vh;
+  padding: 1rem;
+}
+.content * + * {
+  margin-top: 1em;
+  margin-bottom: 0;
+}
+
+/****************************************************************
+THIS IS WHERE THE MAGIC HAPPENS
+****************************************************************/
+.cover-container {
+  box-sizing: content-box;
+  padding-top: 100vh;
+}
+.cover-container--idle {
+  padding-top: initial;
+}
+.cover-container--idle .cover,
+.cover-container--idle .cover-adjacent {
+  position: static;
+}
+
+.cover {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  background-color: #40aabf;
+  color: #fff;
+  align-items: center;
+  justify-content: center;
+}
+
+.cover__title {
+  font-size: 8vw;
+  text-align: center;
+}
+
+.cover__subtitle {
+  display: block;
+  font-size: 50%;
+  font-weight: normal;
+}
+
+.cover-adjacent {
+  position: fixed;
+  top: 0;
+  padding-top: 0;
+  overflow: scroll;
+}
+
+
+
+/*
+body{
+  min-height: 2000px;  
+}
+
+.curtain{
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 102;
+  color: #fff;
+  background: #000;
+  height: 100%;
+}
+.cover h1{
+  font-size: 50px;
+  text-align: left;
+  font-family: 'Playfair Display', serif;
+/*  text-transform: uppercase;*/
+/*  font-style: italic;
+  color: #333;
+  display: table-cell;
+  vertical-align: middle;
+}*/
+/*
+.cover{
+  display: table;
+  width: 100%;
+  height: 100vh;
+  background: url(http://cdn.earthporm.com/wp-content/uploads/2014/07/Humming-Bird-5.jpg) center center no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;  
+}
+
+main{
+  margin-top: 0px;
+  margin-bottom: 1180px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin: 0 auto;
+  width: 100%;  
+}
+
+header.sliver{
+  width: 100%;
+  height: 400px;
+  background: url(/static/bw_background.jpg) center center no-repeat fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;  
+  background-size: cover;
+}
+
+section{
+  padding: 10px;
+}*/

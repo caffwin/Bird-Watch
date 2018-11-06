@@ -1,15 +1,22 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <h1>Users List</h1>
 
-  <h2>Users</h2>
+</head>
+<body>
 
+  <form action='/get_user_id'>  
+    <input type="text" id="search-user" placeholder="Search for a user..">
+    <input type="submit" value="Search" id="search-username">
+  </form>
 
-<div class="user_search">
-    Search for a user:
-  <input type="text" placeholder="Search..">
+<br>  
 </div>
 
 <br>
@@ -23,5 +30,33 @@
      </li>
     {% endfor %}
 
+
+
+<script>
+  "use strict";
+  // make get request to specific form for information 
+  // Pass information to back end method
+
+// function showUser(results) {
+
+
+// }  
+
+
+
+function sendUserInfo(evt) {
+    evt.preventDefault();
+    let searchString = {'searchFor': $('#search-user').val()};
+    console.log(searchString)
+    $.get('/get_user_id', searchString);
+}
+
+$('#search-username').on('click', sendUserInfo)
+
+</script>
+
+
+
+<!-- ID for event listeners or classes for style  -->
 
 {% endblock %}

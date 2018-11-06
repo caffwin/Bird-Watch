@@ -48,28 +48,53 @@ Email: {{ user.email }}</p>
 {% for favorite in user.favorites %}
 
     <br>
-    <input type="checkbox" name="remove_bird" value="bird_to_remove">
+    <input type="checkbox" name="remove_bird" data-com-name="{{ favorite.bird.common_name }}" data-sci-name="{{ favorite.bird.scientific_name }}" data-species-code="{{ favorite.bird.species_code }}">
     {{ favorite.bird.common_name }}
+    <br>
+    <img class='display-bird-pic' src={{ favorite.bird.image }}></img>
+    <br>
 
 {% endfor %}
 
 <br>
-<button id='delFave' onclick='faveUnfave()'>Remove</button>
-<!-- You can only use this button if logged in, and fave exists -->
+<button id='delFave'>Remove</button>
+<br>
 
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
 <script>
   "use strict";
 
-var delButton = document.querySelector('#delFave')
+function refreshPage() {
+  window.location.reload();
+}
 
+function removeFaves(evt) {
+  console.log("I pressed the 'remove' button")
+  // send info: bird id and user id - to remove row from faves
+
+  // for any values that are checked... 
+  let checkboxes = $('input[name="remove_bird"]:checked');
+  let speciesCodes = checkboxes.map(function(index, checkbox) {
+    return checkbox.dataset.speciesCode;
+  });
+  
+  speciesCodes = speciesCodes.toArray();
+  let data = {
+    speciesCodes: JSON.stringify(speciesCodes)
+  };
+
+  $.post('/remove_faves',
+    data,
+    refreshPage);
+}
+
+$('#delFave').on('click', removeFaves);
 
 </script>
-<br>
-<br>
-Bird things:
 
-<p>BotD</p>
+<br>
+<br>
 
 
 {% endblock %}

@@ -37,30 +37,12 @@ on earth!
 <br>
 
 <form id="birdForm" style="display:none;" action="/get_bird_page_data">
-  <label>Select a nearby bird:</label><br>
+  <label>Select from all nearby birds:</label><br>
   <select id="birdSelections" name="speciesCode">
   </select>
   <input type='submit' class='getBirds' value='Submit'> 
 </form>
 
-<br>
-<br>
-<br>
-Use current location to display nearby birds using the button above!
-
- 
-<br>
-<br>
-<br>
-Or find birds using custom coordinates:
-<br>
-<br>
-Longitude: <input type='text' name='longLocation'>
-<br>
-Latitude: <input type='text' name='latLocation'>
-<br>
-<input type='submit' class='inputLocation'>
-</form>
 <br>
 <br>
 
@@ -96,10 +78,12 @@ Latitude: <input type='text' name='latLocation'>
 
       let map;
 
+
+
       function initialize() {
           let mapOptions = {
-              zoom: 10
-
+              zoom: 10,
+              styles: MAPSTYLES,
           };
           map = new google.maps.Map(
                   document.getElementById('map-canvas'),
@@ -121,11 +105,17 @@ Latitude: <input type='text' name='latLocation'>
 
                   // test marker for current location here:
 
-
+                  let icon = {
+                    url: '/static/black_marker.svg',
+                    scaledSize: new google.maps.Size(40, 40),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(19, 40)
+                  }
 
                   let marker = new google.maps.Marker({
                     position: pos,
                     map: map,
+                    icon: icon,
                     title: 'Somehow you found me'
                     // draggable: true,
                     // title: 'Drag me!'
@@ -189,22 +179,18 @@ Latitude: <input type='text' name='latLocation'>
       google.maps.event.addDomListener(window, 'load', initialize);
 
 
-console.log("TESTTEST1231123123");
-
-
 function populateMap(results) {
   for (bird of results) {
     if (bird['howMany'] > 5) {  // Shows nearby birds if there are more than 5
 
 
       let latlng = {lat: bird['lat'], lng: bird['lng']}; 
-      console.log("There are more than 15 of this bird: ")
+      console.log("There are more than 5 of this bird: ")
       console.log(bird['comName']);
-      console.log(bird);
 
       let birdInfo = (
         '<div class="window-content">' +
-              '<img src="/static/bird_thumb.jpg" alt="birdpic" style="width:50px;" class="thumbnail">' +
+              '<a href=/birds/' + bird['speciesCode'] + '><img src="/static/bird_thumb.jpg" alt="birdpic" style="width:50px;" class="thumbnail"></a>' + '<a href=/birds/' + bird['speciesCode'] + '>Click for more information</a>' +
               '<p><b>Common name: </b>' + bird['sciName'] + '</p>' +
               '<p><b>Scientific name: </b>' + bird['comName'] + '</p>' +
               '<p><b>Estimated number: </b>' + bird['howMany'] + '</p>' +
@@ -238,14 +224,7 @@ function showBirds(results) {
   populateDropDown(results);
 }
 
-
-let birdSelection = document.querySelector('#birdSelections');
-
-// document.querySelector('#birdSelections'); is $('#birdSelections') in jQuery
-// $('#birdSelections').val()?
-
-// $('#birdform').on('submit', getBirdTitle)
-
+let birdSelection = $('#birdSelections');
 
 function makeRequest() {
   console.log(map.center.lat());
@@ -260,14 +239,198 @@ function makeRequest() {
     showBirds);
 }
 
-  $('#getBirdButton').on('click', makeRequest)
+$('#getBirdButton').on('click', makeRequest)
 
-
-var myDoughnutChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: data,
-    options: options
-});
+const MAPSTYLES = [
+    {
+        "featureType": "water",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "visibility": "on"
+            },
+            {
+                "color": "#aee2e0"
+            }
+        ]
+    },
+    {
+        "featureType": "landscape",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "color": "#abce83"
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "color": "#769E72"
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "color": "#7B8758"
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "elementType": "labels.text.stroke",
+        "stylers": [
+            {
+                "color": "#EBF4A4"
+            }
+        ]
+    },
+    {
+        "featureType": "poi.park",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "visibility": "simplified"
+            },
+            {
+                "color": "#8dab68"
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "visibility": "simplified"
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "color": "#5B5B3F"
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "labels.text.stroke",
+        "stylers": [
+            {
+                "color": "#ABCE83"
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "labels.icon",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "road.local",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#A4C67D"
+            }
+        ]
+    },
+    {
+        "featureType": "road.arterial",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#9BBF72"
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#EBF4A4"
+            }
+        ]
+    },
+    {
+        "featureType": "transit",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "administrative",
+        "elementType": "geometry.stroke",
+        "stylers": [
+            {
+                "visibility": "on"
+            },
+            {
+                "color": "#87ae79"
+            }
+        ]
+    },
+    {
+        "featureType": "administrative",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "color": "#7f2200"
+            },
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "administrative",
+        "elementType": "labels.text.stroke",
+        "stylers": [
+            {
+                "color": "#ffffff"
+            },
+            {
+                "visibility": "on"
+            },
+            {
+                "weight": 4.1
+            }
+        ]
+    },
+    {
+        "featureType": "administrative",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "color": "#495421"
+            }
+        ]
+    },
+    {
+        "featureType": "administrative.neighborhood",
+        "elementType": "labels",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    }
+];
 
 </script>
 

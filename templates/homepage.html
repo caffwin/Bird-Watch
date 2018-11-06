@@ -2,60 +2,120 @@
 
 {% block content %}
 
-<h1 class="header">Welcome to the bird watcc!</h1>
+<!--  <header class="curtain">
+  <div class="cover">
+    <h1>Welcome to Bird Watch</h1>
+  </div>
+</header>
+<main>
+  <header class="sliver">
+    
+  </header>
+  <section> -->
 
-<h2>Here is our bird of the day!</h2>
+<main class="cover-container cover-container--idle js-cover-container">
+  <div class="cover">
+    <h1 class="cover__title">
+      Welcome to Bird Watch!
+      <span class="cover__subtitle">hello!</span>
+    </h1>
+  </div>
 
-
-
-{% if not user %}
-    Welcome to Bird Watch! Please log in to use all of our interactive features.
+  <div class="content cover-adjacent">
+    <div class="scrolly">
+    {% if not user %}
+    Welcome to Bird Watch! Please log in or register to get the full experience from all of our interactive features.
+    <br>
+    <br>
     <a href="/login"><button type="logInButton">Log In</button></a>
 
     <a href="/register"><button type="registerButton">Register</button></a>
+    <br>
 
-{% else %}
-    {{ user.username }}, you are logged in!
-    <br>
-    <br>
-    <a href="/users/my_page">My page</a>  
-    <br>       
-    <a href="/birds_list">View All Birds</a>
-    <br>
-    <a href="/users">View All Users</a>
-    <br>
-    <a href="/map">Find nearby birds our interactive map!</a>
-    <br>
-    <br>
-    <a href="/logout"><button type="logOutButton">Log Out</button></a>
-    <br>
-{% endif %}
+    {% else %}
 
-<img src="https://www.australiangeographic.com.au/wp-content/uploads/2018/06/pink-robin-1.jpg" class="homepage_img">
-</img>
-<br>
+        {{ user.username }}, you are logged in!
+        <br>
+        <br>
+        <a href="/users/my_page">My page</a>  
+        <br>       
+        <a href="/birds_list">View All Birds</a>
+        <br>
+        <a href="/users">View All Users</a>
+        <br>
+        <a href="/map">Find nearby birds our interactive map!</a>
+        <br>
+        <br>
+        <a href="/logout"><button type="logOutButton">Log Out</button></a>
+        <br>
+
+    {% endif %}
+
+    <br>
+
+    <h5>Here is a dynamically generated image with birds that users have favorited!</h5>
+
+    <img src="https://www.australiangeographic.com.au/wp-content/uploads/2018/06/pink-robin-1.jpg" class="homepage_img"></img>
+    </div>
+  
+  </div>
+  
+</main>
+
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 
+<script src='https://cdnjs.cloudflare.com/ajax/libs/babel-core/6.1.19/browser.min.js'></script>
 
 <script>
+class Cover {
+  constructor(containerElement) {
+    this.containerElement = containerElement;
+    this.isUpdateStateScheduled = false;
+    
+    this.updateContainerHeight();
+    this.scheduleUpdateState();
+    window.addEventListener('scroll', this.scheduleUpdateState.bind(this));
+  }
+  
+  updateContainerHeight() {
+    const hasIdleClass = this.containerElement.classList.contains(Cover.CLASS_CONTAINER_IDLE);
+    
+    this.containerElement.classList.add(Cover.CLASS_CONTAINER_IDLE);
+    this.containerElement.style.height = `${this.containerElement.clientHeight}px`;
+    this.containerElement.classList.toggle(Cover.CLASS_CONTAINER_IDLE, hasIdleClass);
+  }
+  
+  scheduleUpdateState() {
+    // Do nothing is update is already scheduled
+    if (this.isUpdateStateScheduled) {
+      return;
+    }
+    
+    requestAnimationFrame(this.updateState.bind(this));
+    this.isUpdateStateScheduled = true;
+  }
+  
+  updateState() {
+    const scrollTop = document.body.scrollTop;
+    const classCoverIdle = 'cover-container--idle';
+    
+    const shouldBeIdle = scrollTop >= window.innerHeight;
+    this.containerElement.classList.toggle(classCoverIdle, shouldBeIdle);
+    
+    this.isUpdateStateScheduled = false;
+  }
+}
 
+Cover.CLASS_CONTAINER_IDLE = 'cover-container--idle';
 
-// myFunction();
-// function showBotD(results) {
+new Cover(document.querySelector('.js-cover-container'));
 
-// }
-
-
-// function requestFlickr() {
-//     $.get('')
-
-// }
 
 </script>
 
-<!-- 1 to 500 per_page, default 100 and specify which page you want  -->
-<!-- same 100 birds -->
+
+</main>  
 
 {% endblock %}
