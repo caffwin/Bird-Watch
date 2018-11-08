@@ -2,19 +2,27 @@
 
 {% block content %}
 
-<h1>Login Form</h1>
 
-<form action='/login' method='POST'>
 
-    Enter Username: <input type='text' name='login_id'>
-    <br>
-    Enter Password: <input type='password' name='password'>
-    <br>
-    <br>
-    <input type='submit'>
-    <br>
-    <br>
-    <a href="/forgot_password">Forgot password? Reset it here!</a>  
-</form>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Login Form</h1>
+            <br>
+            <form action='/login' method='POST'>
+
+                Enter Username: <input type='text' name='login_id'>
+                <br>
+                Enter Password: <input type='password' name='password'>
+                <br>
+                <input class='sub-btn' type='submit'>
+                <br>
+                <br>    
+                <a href="/forgot_password" style="font-size: 14px;"><i>Forgot password? Reset it here!</i></a>  
+            </form>
+
+        </div>
+    </div>
+</div>
 
 {% endblock %}

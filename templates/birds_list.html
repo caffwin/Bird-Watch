@@ -2,18 +2,29 @@
 
 {% block content %}
 
-<h1>Bird Hall of Fame</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>Bird Hall of Fame</h1>
+                    <h3>Here are all of the birds that have been favorited by users!</h2>
 
-  <h3>Here are all of the birds that have been favorited by users!</h2>
+                    {% for bird in birds %}
+                  
+                        <a href="/birds/{{ bird.species_code }}">
+                        
+                          {{ bird.common_name }}</a> ({{ bird.scientific_name }})
+                        <br>
 
-    {% for bird in birds %}
-  
-        <a href="/birds/{{ bird.species_code }}">
-        
-          {{ bird.common_name }}</a> ({{ bird.scientific_name }})
-        <br>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    {% endfor %}
+
 
 
 {% endblock %}

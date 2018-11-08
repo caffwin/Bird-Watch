@@ -5,51 +5,75 @@
 
 {% block content %}
 
-<h1>Bird Details</h1>
-<h2>{{ bird.comName }}</h2>
-<p id='desc'>{{ bird.comName }}'s scientific name is {{ bird.sciName }}!</p>
-
-{% if bird_photo %}
-  <img class='cont-rounded' src={{ bird_photo[0] }}></img>
-  <img class='cont-rounded' src={{ bird_photo[1] }}></img>
-  <br>
-  <img class='cont-rounded' src={{ bird_photo[2] }}></img>
-  <img class='cont-rounded' src={{ bird_photo[3] }}></img>
+<h1 class='title-top-bp'>Bird Details: {{ bird.comName }}
+{% if favorite %}
+  <img class='med-icon' src='/static/heart_icon.png'>
 {% else %}
-
-  <img src="https://i.pinimg.com/originals/94/78/b5/9478b558a1136e2f9958b458ea2e6dd8.jpg"></img>
 {% endif %}
+</h1>
 
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row">
+        {% if bird_photo %}
+        <div class="col-md-3">
+          <img class='cont-rounded-left' src={{ bird_photo[0] }}></img><br><br>
+          <img class='cont-rounded-right' src={{ bird_photo[1] }}></img>
+        </div>
+        <div class="col-md-3">
+          <img class='cont-rounded-left' src={{ bird_photo[2] }}></img><br><br>
+          <img class='cont-rounded-right' src={{ bird_photo[3] }}></img>
+        </div>
+        {% else %}
+        <div class="col-md-3">
+            <img src="/static/bird_thumb.jpg"></img>
+        </div>  
+        {% endif %}
+        <div class="col-md-6">
+          <p id='desc'>The {{ bird.comName }}'s scientific name is {{ bird.sciName }}.</p>
+          <br>
+          {% if xc_url %}
+          <a href='{{ xc_url }}'>
+          Click here to listen this bird's song clip: <img class='small-icon' src='/static/audio_icon.png'></img></a>
+          {% else %}
+          There is no audio clip for this bird from Xeno-Canto's API.
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <br>
-<button id='faveOnOff' class='fave-text' data-com-name="{{ bird.comName }}" data-sci-name="{{ bird.sciName }}" data-species-code="{{ bird.speciesCode }}">
+<button id='faveOnOff' class="sub-btn" data-com-name="{{ bird.comName }}" data-sci-name="{{ bird.sciName }}" data-species-code="{{ bird.speciesCode }}">
 {% if favorite %}
   Unfavorite
 {% else %}
   Favorite
 {% endif %}
 </button>
-<br>
-<br>
-{% if xc_url %}
-<a href='{{ xc_url }}'>
-Click here for this bird's song clip <img class='small-icon' src='/static/audio_icon.png'></img></a>
-{% else %}
-There is no audio clip for this bird!
-{% endif %}
+
 <br>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
 <script>
   "use strict";
 
+function refreshPage() {
+  window.location.reload();
+}
 
 // check database if fave exists
-var faveButton = document.querySelector('#faveOnOff');
 
-function showResult(result) {
-  console.log(result);
-}
+
+// function showResult(result) {
+//   console.log(result);
+// }
+
+var faveButton = document.querySelector('#faveOnOff');
 
 function addRemoveFave(evt) {
   console.log('I pressed the button');
@@ -63,7 +87,7 @@ function addRemoveFave(evt) {
     faveButton.innerHTML = 'Unfavorite';
     $.post('/add_fave',
       data, 
-      showResult);
+      refreshPage);
   }
   else {
 
@@ -71,7 +95,7 @@ function addRemoveFave(evt) {
     faveButton.innerHTML = 'Favorite';
     $.post('/remove_fave', 
       data,
-      showResult);
+      refreshPage);
   }
 }
 

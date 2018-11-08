@@ -6,13 +6,13 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<h1>Users List</h1>
+<h1 class='title-top-bp'>Users List</h1>
 
 </head>
 <body>
 
   <form action='/get_user_id'>  
-    <input type="text" id="search-user" placeholder="Search for a user..">
+    <input type="text" id="search-user" class='search-bar' placeholder="Search for a user..">
     <input type="submit" value="Search" id="search-username">
   </form>
 
@@ -22,7 +22,7 @@
 <br>
 
     {% for user in users %}
-     <li>
+     <li class='bullet-list'>
         <a href="/users/{{ user.user_id }}">
             
           {{ user.username }}</a> ({{ user.fname }})

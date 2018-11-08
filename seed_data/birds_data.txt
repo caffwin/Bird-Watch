@@ -1,6 +1,1 @@
-Corvus brachyrhynchos | American_Crow | amecro | https://opimedia.azureedge.net/-/media/images/grt/editorial/articles/magazine-articles/2011/11-01/something-to-caw-about-the-american-crow/grt-nd11-crows-opener-i.jpg
-Buteo jamaicensis | Red-tailed Hawk | redhaw | https://cdn.audubon.org/cdn/farfuture/vMWdnUQNgZlz4Dk0WmI6eqGul9lfxriyNXLWXqOnNl8/mtime:1486671050/sites/default/files/styles/hero_cover_bird_page/public/Red-tailed%20Hawk%20v11-13-016_V.jpg?itok=qCs3x4Kr
 Passer domestics | House Sparrow | houspa | https://d1ia71hq4oe7pn.cloudfront.net/photo/63742431-480px.jpg
-Larus occidentals | Western Gull | wesgul | https://d1ia71hq4oe7pn.cloudfront.net/photo/71316891-480px.jpg
-Phoenicopteridae | Flamingo | flamin | https://ichef.bbci.co.uk/news/660/cpsprodpb/40E0/production/_96180661_z8240029-greater_flamingoes_phoenicopterus_ruber_-spl.jpg
-Petroica rodinogaster | Pink Robin | pinrob | https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTt7hZE8EDO2KTblTR7n3W9mqU4bBCnCJcw3hPOR0WQTNNVaDmE

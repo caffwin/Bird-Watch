@@ -2,27 +2,126 @@
 
 {% block content %}
 
-<!--  <header class="curtain">
+
+<div id='greeting'><h1>Welcome to Bird Watch</h1></div>
+<header class="curtain">
   <div class="cover">
-    <h1>Welcome to Bird Watch</h1>
+    <h1 class='greeting'>Welcome to Bird Watch</h1>
+    <p id='species-desc'>Barn Owl: Tyto alba</h5>
   </div>
 </header>
 <main>
   <header class="sliver">
     
   </header>
-  <section> -->
+  
+  {% if not user %}
 
-<main class="cover-container cover-container--idle js-cover-container">
-  <div class="cover">
-    <h1 class="cover__title">
-      Welcome to Bird Watch!
-      <span class="cover__subtitle">hello!</span>
-    </h1>
-  </div>
+<!--     <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <div id='greeting'><h1>Welcome to Bird Watch</h1>
+            </div>
+            <div class="col-md-6">
+                 <div style="float: right">
+                    <a href="/login"><button class='btn btn-primary btn-sm' type="logInButton">Log In</button></a>
+                    <div class="divider"/></div>
+                    <a href="/register"><button class='btn btn-primary btn-sm' type="registerButton" style="margin-left:-6px;">Register</button></a> 
+                </div>  
+            </div>
+        </div>
+    </div>
+    
+ -->
+    <text style="font-size: 50px;"><i>Welcome to Bird Watch</i></text><br>
+    <br>
+    <div style='margin-left: 5px'>
+    Please log in or register to get the full experience from all of our interactive features.
+    <br>
+    <a href="/login"><button class='btn btn-primary btn-sm' type="logInButton">Log In</button></a>
+    <div class="divider"/></div>
+    <a href="/register"><button class='btn btn-primary btn-sm' type="registerButton" style="margin-left:-6px;">Register</button></a> 
+    </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
 
-  <div class="content cover-adjacent">
-    <div class="scrolly">
+            </div>
+        </div>
+    </div>
+        
+
+       
+
+    {% else %}
+    
+        <p id='logged-in-msg'>{{ user.username }}, you are logged in!</p>
+        
+        <a href="/logout"><button type="logOutButton" id='log-out' class='btn btn-secondary btn-sm'>Log Out</button></a>
+        <br>
+
+         <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-2">
+                        </div>
+                        <div class="col-md-2">
+
+                            <div class="card" style="width: 18rem;">
+                              <a href="/users/my_page"><img class='home-icon' src='/static/my_page.png'></img></a>
+                              <div class="card-body">
+                                <h5 class="card-title"><a href="/users/my_page">My page</a></h5>
+                  
+                              </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-2">
+
+                            <div class="card" style="width: 18rem" >
+                              <a href="/birds_list"><img class='home-icon' src='/static/bird_icon.png'></img></a>
+                              <div class="card-body" style="padding-left: 10px;">
+                                <p class="card-title" ><a href="/birds_list">View All Birds</a></p>
+                  
+                              </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-2">
+
+                            <div class="card" style="width: 18rem;">
+                              <a href="/users"><img class='home-icon' src='/static/users.png'></img></a>
+                              <div class="card-body" style="padding-left: 15px;">
+                                <h5 class="card-title"><a href="/users">View All Users</a></h5>
+                  
+                              </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+
+                           <div class="card" style="width: 18rem;">
+                              <a href="/map"><img class='home-icon' src='/static/google_maps_icon.png'></img></a>
+                              <div class="card-body" style="padding-left: 15px;">
+                                <h5 class="card-title"><a href="/map">Interactive Map</a></h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    {% endif %}
+
+
+
+  </section>
+</main>  
+
     {% if not user %}
     Welcome to Bird Watch! Please log in or register to get the full experience from all of our interactive features.
     <br>
@@ -35,6 +134,7 @@
     {% else %}
 
         {{ user.username }}, you are logged in!
+
         <br>
         <br>
         <a href="/users/my_page">My page</a>  
@@ -53,9 +153,9 @@
 
     <br>
 
-    <h5>Here is a dynamically generated image with birds that users have favorited!</h5>
+    <!-- <img src="https://www.australiangeographic.com.au/wp-content/uploads/2018/06/pink-robin-1.jpg" class="homepage_img"></img> -->
 
-    <img src="https://www.australiangeographic.com.au/wp-content/uploads/2018/06/pink-robin-1.jpg" class="homepage_img"></img>
+
     </div>
   
   </div>
@@ -64,57 +164,7 @@
 
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-
-<script src='https://cdnjs.cloudflare.com/ajax/libs/babel-core/6.1.19/browser.min.js'></script>
-
-<script>
-class Cover {
-  constructor(containerElement) {
-    this.containerElement = containerElement;
-    this.isUpdateStateScheduled = false;
-    
-    this.updateContainerHeight();
-    this.scheduleUpdateState();
-    window.addEventListener('scroll', this.scheduleUpdateState.bind(this));
-  }
-  
-  updateContainerHeight() {
-    const hasIdleClass = this.containerElement.classList.contains(Cover.CLASS_CONTAINER_IDLE);
-    
-    this.containerElement.classList.add(Cover.CLASS_CONTAINER_IDLE);
-    this.containerElement.style.height = `${this.containerElement.clientHeight}px`;
-    this.containerElement.classList.toggle(Cover.CLASS_CONTAINER_IDLE, hasIdleClass);
-  }
-  
-  scheduleUpdateState() {
-    // Do nothing is update is already scheduled
-    if (this.isUpdateStateScheduled) {
-      return;
-    }
-    
-    requestAnimationFrame(this.updateState.bind(this));
-    this.isUpdateStateScheduled = true;
-  }
-  
-  updateState() {
-    const scrollTop = document.body.scrollTop;
-    const classCoverIdle = 'cover-container--idle';
-    
-    const shouldBeIdle = scrollTop >= window.innerHeight;
-    this.containerElement.classList.toggle(classCoverIdle, shouldBeIdle);
-    
-    this.isUpdateStateScheduled = false;
-  }
-}
-
-Cover.CLASS_CONTAINER_IDLE = 'cover-container--idle';
-
-new Cover(document.querySelector('.js-cover-container'));
-
-
-</script>
-
+<br>
 
 </main>  
 

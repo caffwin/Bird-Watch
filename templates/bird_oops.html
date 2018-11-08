@@ -1,15 +1,29 @@
 {% extends 'base.html' %}
 
+{% block title %}Oops!{% endblock %}
+
 {% block content %}
-<h2>Oops! The bird with that species code does not exist.</h2>
-<br>
-<a href="/">Go back to the homepage</a>  
 
-<br>
-<a href="/map">Look for more birds!</a>  
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Oops! The bird with that species code does not exist.</h2>
+                    <br>
+                    <a href="/">Back to homepage</a>  
 
-<br>
-<a href="/users/my_page">Go to your profile!</a>  
+                    <br>
+                    <a href="/map">Look for more birds</a>  
+
+                    <br>
+                    <a href="/users/my_page">Go to your profile</a>  
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 {% endblock %}

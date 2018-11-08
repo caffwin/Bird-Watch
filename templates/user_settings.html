@@ -5,80 +5,85 @@
 {% block content %}
 
 
-<h1>Edit User Settings</h1>
-<h2>User ID: {{ user.user_id }}</h2>
-
-Current profile picture:
-<br>
-{% if user.image_name %}
-
-    <img class="user_pic" src="/static/user_pics/{{user.image_name}}"></img>
-
-{% else %}
-
-    <img class="user_pic" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0exBi6zdo2_NSyPhtPeaz6VTxwwlabc1P-BlbAQz90L8VWvYhjQ"></img>
-
-{% endif %} 
-<form action="/upload" method="POST" enctype="multipart/form-data" >
-    <span class="btn btn-default btn-file">
-        <input type="file" name="upload-image">
-    </span>
-    <br>  
-    <input type="submit" value="Submit" class="btn btn-primary">
-</form>
-
-<br>
-
-Username: {{ user.username }}
-<br>
-<br>
-<form action='/update_user_settings' method='POST'>
-  
-    First Name (max 16 chars): 
-    <br>
-    <input type='text' name='upd_fname' value='{{ user.fname }}'>
-    <br>
-    <br>    
-    Last Name (max 16 chars): 
-    <br>
-    <input type='text' name='upd_lname' value='{{ user.lname }}'>
-    <br>
-    <br>
-    Email:
-    <br>
-    <input type='text' name='upd_email' value='{{ user.email }}'>
-    <br>
-    <br>
-    Username (max 16 chars):
-    <br>
-    <input type='text' name='upd_username' value='{{ user.username }}'>
-    <br>
-    <br>
-    Reset Password?
-    <br>
-    <br>
-    Current Password:
-    <br>
-    <input type='password' name='check_pw'>
-    <br>
-    <br>
-    New Password:
-    <br>
-    <input type='password' name='upd_pw'>
-    <br>
-    Confirm New Password:
-    <br>
-    <input type='password' name='upd_pw2'>   
-    <br>
-    <br>
-    <input type="submit" value="Submit Changes" class="settings-update">
-</form>
-<br>
-<br>
 
 
-<br>
 
-<!-- on click, pass information from form -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <h1 class='title-top'>Edit User Settings</h1>
+            <h2 class='user-id-mp'>Username: {{ user.username }}</h2>
+        </div>
+        <div class="col-md-6">
+        
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-4">
+                <p class='text-desc'>Change profile picture:</p>
+                {% if user.image_name %}
+                    <img class="user-pic-larger" src="/static/user_pics/{{user.image_name}}"></img>
+                {% else %}
+                    <img class="user_pic" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0exBi6zdo2_NSyPhtPeaz6VTxwwlabc1P-BlbAQz90L8VWvYhjQ"></img>
+                {% endif %} 
+                <form action="/upload" method="POST" enctype="multipart/form-data" >
+                    <span class="btn btn-default btn-file">
+                        <input type="file" name="upload-image">
+                    </span>
+                    <br>  
+                    <input type="submit" value="Submit" class="sub-btn">
+                </form>
+                </div>
+                <div class="col-md-3">
+                <form action='/update_user_settings' method='POST'>
+              
+                    <div class='settings-field'>First Name (max 16 chars): </div>
+                    <input type='text' name='upd-fname' value='{{ user.fname }}'>
+                    <br>   
+                    <div class='settings-field'>Last Name (max 16 chars):</div>
+                    <input type='text' name='upd-lname' value='{{ user.lname }}'>
+                    <br>
+                    <div class='settings-field'>Email:</div>
+                    <input type='text' name='upd-email' value='{{ user.email }}'>
+                    <br>
+                    <div class='settings-field'>Username (max 16 chars):</div>
+                    <input type='text' name='upd-username' value='{{ user.username }}'>
+                    <br>
+                    <br>
+                    <b>Reset Password</b>
+                    <br>
+                    <br>
+                    <div class='settings-field'>Current Password:</div>
+                    <input type='password' name='check-pw'>
+                    <br>
+                    <div class='settings-field'>New Password:</div>
+                    <input type='password' name='upd-pw'>
+                    <br>
+                    <div class='settings-field'>Confirm New Password:</div>
+                    <input type='password' name='upd-pw2'>   
+                    <br>
+                    <br>
+                    <input type="submit" value="Submit Changes" class="sub-btn">
+                </form>
+                </div>
+                <div class="col-md-5">
+                    <div class='settings-field'>Profile Description (max 750 chars):</div>
+                    <form action='/update_user_desc' method='POST'>
+                    <textarea rows='4' cols='50' type='text' name='profile-desc' class='upd-desc'></textarea>
+                    <br>
+                    <input type="submit" value="Submit" class="sub-btn">
+                    <!-- <input type='text' name='upd_desc' value='{{ user.description }}'> -->
+        
+                    </form>
+                    <br>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

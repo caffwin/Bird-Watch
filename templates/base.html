@@ -9,9 +9,10 @@
         <title>{% block title %}{% endblock %}</title>
         {% block header %}{% endblock %}
 
+        <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville" rel="stylesheet">  <!-- for greeting font -->
         <!-- Bootstrap -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">        
-       <!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap-theme.min.css"> -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap-theme.min.css">
         <!-- Google fonts link -->
         <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Raleway" >
         <!-- my CSS -->
@@ -30,8 +31,8 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-              <li class="nav-item active">
-                <a class="nav-link" href="/about">About<span class="sr-only">(current)</span></a>
+              <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
               </li>
 
               <li class="nav-item">
@@ -64,12 +65,12 @@
                 </li>
               {% endif %}              
 
-         
             </ul>
           </div>
         </nav>
 
         {% block content %}
+
         {% with messages = get_flashed_messages() %}
         {% if messages %}
             <ul>
@@ -100,19 +101,18 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
         {% endblock %}
+
         <br>
         <footer class="page-footer font-small blue">
             <div class='footer-font'>
             Created by: <a href="https://github.com/caffwin">Catherine Li</a>
+            | Contact information: <a href="mailto:the.birb.watch@gmail.com">
+            the.birb.watch@gmail.com</a>
             <br>
             APIs used: <a href='https://documenter.getpostman.com/view/664302/ebird-api-20/2HTbHW'>eBird</a>, <a href='https://developers.google.com/maps/documentation/'>Google Maps</a>, <a href='https://www.flickr.com/services/api/'>Flickr</a>, <a href='https://www.xeno-canto.org/article/153'>Xeno-Canto</a>
             <br>
-            Contact information: <a href="mailto:the.birb.watch@gmail.com">
-            the.birb.watch@gmail.com</a>
             <br>
             © 2018 Copyright: <a href='https://birdwatch.com'>birdwatch.com</a>
-            </div>
-
             </div>
         </footer>
 

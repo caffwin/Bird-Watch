@@ -12,24 +12,94 @@
 }
 
 
-
-body.container {
-    background: url('/images/bird_photos/hr_pics/barnowl.jpeg');
-    background-size: cover;
+.chart-legend li span {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 5px;
 }
 
-#greeting {
-    font-family: 'Playfair Display', serif;
+.bird-chart {
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+
+
+
+
+
+
+
+p#logged-in-msg {
+    font-family: 'Libre Baskerville', serif;
+    font-style: italic;
+    text-align: right;
+    margin-right: 15px;
+}
+
+h2.user-id-mp{
+    font-size: 16px;
+    font-style: italic;
+}
+
+.register-field {
+  font-size: 12px;
+  font-style: italic;
+}
+
+.form-text {
+  font-size: 12px;
+  font-style: italic;
+}
+
+.settings-field {
+  font-size: 12px;
+  font-style: italic;
+}
+
+h5.desc-font {
+  font-style: italic;
+}
+
+/*.get-birds {
+    background-color: #f44336;
+    border-radius: 8px;
+}
+*/
+
+/*body.container {
+    background: url('/images/bird_photos/hr_pics/barnowl.jpeg');
+    background-size: cover;
+}*/
+
+.col-md-6-hp {
+  /*float: right;*/
+  margin-top: 25px;
+}
+
+.greeting {
+    font-family: 'Libre Baskerville', serif;
     font-style : italic;
 }
 
+.greeting#hp-btn {
+  font-family:  'Nanum Gothic', sans-serif;
+}
+
+/*#greeting {
+    font-family: 'Playfair Display', serif;
+    font-family: 'Nanum Gothic', sans-serif;
+}
 
 /*#id {
     font-family: 'Playfair Display', serif;
     font-style : italic;
 }*/
 
-h1{
+h1 {
     font-family: 'Playfair Display', serif;
     font-family: 'Nanum Gothic', sans-serif;
 }
@@ -39,13 +109,124 @@ h1 {
     font-family: 'Playfair Display', serif;
     font-family: 'Nanum Gothic', sans-serif;
 }*/
+
+h1.title-top {
+  margin-top: 10px;
+}
+
+h1.title-top-bp {
+  margin-left: 14px;
+  margin-top: 10px;
+}
+
+.search-bar {
+  margin-left: 14px;
+}
+
+/*h1.title-user {
+  margin-top: 10px;
+}
+*/
+.bullet-list {
+  margin-left: 14px;
+}
+
+
+.row {
+  margin-top: 10px;
+}
+
+.desc-profile {
+  margin-left: -15px;
+}
+
+.bird-chart {
+    height: 600px;
+    width: 600px;
+}
+
 .display-bird-pic {
-    background: no-repeat center center;
+    object-fit: cover;
     position: relative;
     height: 200px;
     width: 200px;
     overflow: hidden;
-    border-radius: 50%;
+    border-radius: 5%;
+    display: center;
+}
+
+
+.col-md-12-title {
+  margin-top: 10px;
+}
+
+.btn.btn-default.btn-file {
+  font-size: 10px;
+  margin-left: -13px;
+  display: inline;
+  margin-bottom: 25px;
+}
+
+.sub-btn {
+  background-color: #696969;
+  color: white;
+  font-size: 14px;
+  border-radius: 5%;
+  border: none;
+}
+
+/*p.text-desc {
+  margin-left: 14px;
+
+}*/
+
+.pub-fave-img {
+/*  object-fit: cover;
+  position: relative;*/
+  height: 200px;
+  width: 200px;
+/*  overflow: hidden;
+  border-radius: 5%;
+  display: center;*/
+}
+
+
+
+#small-font {
+  font-size: 12px;
+  font-style: italic;
+}
+
+.user-pic {
+  object-fit: cover;
+  width: 200px;
+  height: 200px;
+  border-radius: 5px;
+}
+
+.user-pic-pub {
+  object-fit: cover;
+  width: 200px;
+  height: 200px;
+  border-radius: 5px;
+  margin-left: -15px;
+  margin-top: 3px;
+}
+
+.user-pic-larger {
+  object-fit: cover;
+  width: 300px;
+  height: 300px;
+  border-radius: 5px;
+}
+
+.btn.btn-primary.btn-sm { 
+  background-color: #696969;
+  border: none;
+  /*padding: -10px -20px;*/
+  /*font-size: 20px;*/
+  /*border-radius: 10px;*/
+  /*width:50%;    */
 }
 
 .small-icon{
@@ -53,20 +234,125 @@ h1 {
     width: 15px;
 }
 
-.fave-text{
-    color: black;
-    border-radius: 5px;
+.bolded-font {
+  font-style: bold;
 }
 
-.cont-rounded {
+.med-icon{
+    height: 35px;
+    width: 35px;
+    margin-bottom: 8px;
+}
+
+
+#faveOnOff{
+/*    height: 20px;*/
+    /*color: black;*/
+    margin-left: 15px;
+    background-color: #878f99;
+    border: none;
+    /*border-radius: 5px;*/
+}
+
+p#mp-fave-label{
+  margin-top: 20px;
+  margin-left: 14px;
+  margin-bottom: -10px;
+}
+
+.card-title{
+  text-align: center;
+  font-size: 14px;
+}
+
+.checkbox {
+  margin-left: 8px;
+}
+
+.bird-pic {
+  text-align: center;
+}
+
+.cont-rounded-left {
+  /*margin: 0px 0px 0px 150px;*/
+  background: black;
+  object-fit: cover;
+  width: 300px;
+  height: 300px;
+  border-radius: 5px;
+}
+
+.home-icon {
+  width: 100px;
+  height: 100px;
+}
+
+.card-title {
+  text-align: left;
+}
+
+.card {
+  border: none;
+}
+
+#log-out {
+    float: right;
+    margin-right: 14px;
+}
+
 /*    background: no-repeat center center;
     position: relative;*/
 /*    height: 220px;
     width: 220px;*/
     /*overflow: hidden;*/
     /*border-radius: 50%;*/
+.cont-rounded-right {
+  /*margin: 0px 150px 0px 0px;*/
+  background: black;
+  object-fit: cover;
+  width: 300px;
+  height: 300px;
+  border-radius: 5px;
 }
 
+
+.divider {
+    height:auto;
+    display:inline-block;
+}
+
+.col-md-8-bpic {
+  object-fit: cover;
+  width: 300px;
+  height: 300px;
+  border-radius: 5px;
+}
+
+.cont-rounded {
+/*  margin: 0px 0px 0px 150px;*/
+  background: black;
+  object-fit: cover;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+}
+
+.mp-ital {
+  font-style: bold;
+}
+
+.upd-desc {
+    height:200px;
+    width: 300px;
+    padding-left:0;
+    padding-top:0;
+    padding-bottom:0.4em;
+    padding-right: 0.4em;
+}
+
+/*.public-fave {
+
+}*/
 
 /*This is where the cover scroll effect CSS starts*/
 
@@ -99,10 +385,25 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 0;
 }
 
+p#species-desc {
+  font-size: 20px;
+  vertical-align: bottom;  
+  font-family: Georgia serif;
+  font-style: italic;
+  margin: 35em 0em 10em 20em;
+}
+
+
+
+/*body.container {
+  background: url(/static/background_feather.jpeg) center center no-repeat;
+  opacity: 0.5;
+}*/
+
 /****************************************************************
 THIS IS WHERE THE MAGIC HAPPENS
 ****************************************************************/
-.cover-container {
+/*.cover-container {
   box-sizing: content-box;
   padding-top: 100vh;
 }
@@ -146,8 +447,79 @@ THIS IS WHERE THE MAGIC HAPPENS
   padding-top: 0;
   overflow: scroll;
 }
+*/
+/*start cover curtain effect (v1!) here: */
 
 
+body{
+  min-height: 2000px;  
+  background: url('/static/barnowl.jpeg');
+}
+
+.curtain{
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 102;
+  color: #fff;
+  background: #000;
+  height: 100%;
+}
+.cover h1{
+  font-size: 80px;
+  vertical-align: top;
+  text-align: top-left;
+  font-family: Georgia serif;
+  /*text-align: top left;*/
+/*  text-transform: uppercase;*/
+  font-style: italic;
+  color: #333;
+  display: table-cell;
+  /*vertical-align: middle;*/
+}
+
+.cover{
+  display: table;
+  width: 100%;
+  height: 100vh;
+  background: url(/static/curtain_barnowl.jpeg) center center no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;  
+}
+
+main{
+  margin-top: 0px;
+  margin-bottom: 1180px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin: 0 auto;
+  width: 100%;  
+}
+
+header.sliver{
+  width: 100%;
+  height: 450px;
+  background: url(/static/curtain_fla.jpeg) center center no-repeat;
+  opacity: 0.8;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;  
+  background-size: cover;
+}
+
+section{
+  padding: 10px;
+}
+
+
+
+/*End V1 cover curtain effect)*/
 
 /*
 body{

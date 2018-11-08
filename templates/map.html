@@ -4,17 +4,21 @@
 
 {% block content %}
 
-<h1>Birding Map</h1>
-<h4>Find nearby birds with our interactive map!</h4>
-<br>
-Allow the browser to access your location to return nearby birds, or
-enter coordinates manually to return birds within a certain radius anywhere
-on earth!
-  
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>Birding Map</h1>
+      <h5 class='desc-font'>Find nearby birds using your geolocation with our interactive map!</h5><br>
+      Send your location to show all of the birds near you, or zoom in and out manually to return birds within a certain radius anywhere on earth.
+    </div>
+  </div>
+</div>
+
+
 <style>
   #map-canvas {
-    height: 50%;
-    width: 50%;
+    height: 20%;
+    width: 55%;
   }
   /* Optional: Makes the sample page fill the window. */
   html, body {
@@ -24,14 +28,15 @@ on earth!
   }
 </style>
 
-<h3>Geolocation</h3>
+
+
 <div id="map-canvas" height="600px"></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+
 <script src="https://maps.googleapis.com/maps/api/js?key={{ key }}"></script>
-
 <br>
-
-<button id='getBirdButton'>Show me all of the nearby birds!</button>
+<button class= 'sub-btn' id='getBirdButton'>Show me all of the nearby birds!</button>
 
 <br>
 <br>
@@ -40,19 +45,19 @@ on earth!
   <label>Select from all nearby birds:</label><br>
   <select id="birdSelections" name="speciesCode">
   </select>
-  <input type='submit' class='getBirds' value='Submit'> 
+  <input type='submit' class="sub-btn" value='Submit'> 
 </form>
 
 <br>
 <br>
-
-<script type="text/javascript">console.log("Hi this is test text before the query!")</script>
+<div class="bird-chart">
+  <canvas id="birdChart"></canvas>
+  <!-- <div id="birdLegend" class="chart-legend"></div> -->
+</div>
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 <script>
-
-
 
       let infoWindow = new google.maps.InfoWindow({
         width: 80
@@ -79,7 +84,6 @@ on earth!
       let map;
 
 
-
       function initialize() {
           let mapOptions = {
               zoom: 10,
@@ -95,15 +99,6 @@ on earth!
                   let pos = new google.maps.LatLng(
                           position.coords.latitude,
                           position.coords.longitude);
-                  console.log(pos);
-                  // instead of info window, add marker 
-                  // let infowindow = new google.maps.InfoWindow({
-                  //     map: map,
-                  //     position: pos,
-                  //     content: 'Somehow you found me'
-                  // });
-
-                  // test marker for current location here:
 
                   let icon = {
                     url: '/static/black_marker.svg',
@@ -124,34 +119,22 @@ on earth!
                   let userInfoWindow = new google.maps.InfoWindow({
                     map: map,
                     position: pos,
-                    content: "You are here!"
+                    content: "You are here!",
+                    pixelOffset: new google.maps.Size(0, -40),
                   });
                
                   google.maps.event.addListener(marker, 'click', function () { //sets up listener for each marker
-                  infoWindow.close(); //closes info window
-                  infoWindow.setContent(content); // replaces info
-                  infoWindow.open(map, marker); // opens info window again at the marker location
+                    infoWindow.close(); //closes info window
+                    infoWindow.setContent(content); // replaces info
+                    infoWindow.open(map, marker); // opens info window again at the marker location
                   });
 
-                  console.log(position);
-                  console.log(typeof position);
-                  console.log(position.coords.latitude); // need this lat
-                  console.log(position.coords.longitude); // need this lng
-
-
                   map.setCenter(pos);
-
-
-                  console.log("Map Center Lat is: ")
-                  console.log(map.center.lat())
-                  console.log("Map Center Lng is: ")
-                  console.log(map.center.lng())
 
               }, function () {
                   handleNoGeolocation(true);
               });
           } else {
-              // If browser doesn't support Geolocation
               handleNoGeolocation(false);
           }
       }
@@ -179,14 +162,41 @@ on earth!
       google.maps.event.addDomListener(window, 'load', initialize);
 
 
+
+    // datasets is a list of dicts
+    // Make Donut Chart of percent of different type of birds
+    // 
+    // let data = {
+    //   'labels': ,
+    //   datasets: [
+    //       {
+
+
+    //     }
+    //   ],
+    // }
+
+
+
 function populateMap(results) {
+  let bird_labels = []
+  let how_many_data = []  
+  let color_list = []
+
   for (bird of results) {
-    if (bird['howMany'] > 5) {  // Shows nearby birds if there are more than 5
-
-
+    if (bird['howMany'] > 15) {  // Shows nearby birds if there are more than 15
+    
       let latlng = {lat: bird['lat'], lng: bird['lng']}; 
       console.log("There are more than 5 of this bird: ")
       console.log(bird['comName']);
+
+      console.log("BIRD COM NAME BEING ADDED TO BIRD_LABELS: ")
+      bird_labels.push(bird['comName'])
+      console.log("BIRD HOW MANY BEING ADDED TO HOW_MANY_DATA: ")
+      how_many_data.push(bird['howMany'])
+
+      color_list.push(getRandomColor())
+      // console.log(typeof(color)) string
 
       let birdInfo = (
         '<div class="window-content">' +
@@ -201,8 +211,65 @@ function populateMap(results) {
       marker = addMarker('https://www.unisourceit.com/wp-content/uploads/pin.png', latlng, map, results['comName']);
 
       bindInfoWindow(marker, map, infoWindow, birdInfo)
+
+
     }
   }
+
+  let data_dict = {
+        "labels": bird_labels,
+        "datasets": [{ 
+          "data": how_many_data,
+          "backgroundColor": color_list,
+          "hoverBackgroundColor": color_list
+        }]
+      }
+  console.log(data_dict)
+
+  const options = {
+      responsive: true
+  };
+
+  let ctx_donut = $("#birdChart").get(0).getContext("2d");
+
+  let myBirdChart = new Chart(ctx_donut, {
+                                          type: 'doughnut',
+                                          data: data_dict,
+                                          options: options
+                                        });
+  $('#birdLegend').html(myBirdChart.generateLegend());
+}
+
+
+// function randomize_from_color_list() {
+//   for (i=0; i < len(color_list); i++)
+//     return color[i];
+// }
+
+// helpers.each(dataset.data,function(dataPoint,index){
+//                     //Add a new point for each piece of data, passing any required data to draw.
+
+    //     datasetObject.bars.push(new this.BarClass({
+    //         value : dataPoint,
+    //         label : data.labels[index],
+    //         datasetLabel: dataset.label,
+    //         strokeColor : dataset.strokeColor,
+    //         fillColor : getRandomColor(),
+    //         highlightFill : dataset.highlightFill || dataset.fillColor,
+    //         highlightStroke : dataset.highlightStroke || dataset.strokeColor
+    //     }));
+    // },this);
+
+
+function getRandomColor() {
+    let letters = '0123456789ABCDEF'.split('');
+    let color = '#';
+    for (var i = 0; i < 6; i++ ) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    console.log("Random color: ")
+    console.log(color)
+    return color;
 }
 
 function populateDropDown(results) {
@@ -240,6 +307,11 @@ function makeRequest() {
 }
 
 $('#getBirdButton').on('click', makeRequest)
+
+
+
+
+
 
 const MAPSTYLES = [
     {
@@ -431,6 +503,7 @@ const MAPSTYLES = [
         ]
     }
 ];
+
 
 </script>
 

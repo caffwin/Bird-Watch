@@ -5,60 +5,93 @@
 {% block content %}
 
 
-<h1>My Feed</h1>
-<h2>User ID: {{ user.user_id }}</h2>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-6">
+          <h1>My Info</h1>
+          <h2 class='user-id-mp'>User ID: {{ user.user_id }}</h2>
+        </div>
+        <div class="col-md-6">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          {% if user.image_name %}
 
-{% if user.image_name %}
+            <img class="user-pic" src="/static/user_pics/{{user.image_name}}"></img>
+            <p id='small-font'>Suggested image size:
+            <br>200 x 200 px</p>
 
-    <img class="user_pic" src="/static/user_pics/{{user.image_name}}"></img>
+          {% else %}
 
-{% else %}
+            <img class="user-pic" src="/static/user_pics/generic_silhouette.png"></img>
 
-    <img class="user_pic" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0exBi6zdo2_NSyPhtPeaz6VTxwwlabc1P-BlbAQz90L8VWvYhjQ"></img>
+          {% endif %} 
 
-{% endif %} 
+          <form action="/upload" method="POST" enctype="multipart/form-data">
+            <span class="btn btn-default btn-file">
+              Browse: <input type="file" name="upload-image">
+            </span>
+            <br>
+            <input type="submit" value="Submit" class="sub-btn">
+          </form>
+        </div>
+        <div class="col-md-3">
+          <br>
+          <text class='mp-ital'><b>First Name:</b></text> {{ user.fname }} 
+          <br>    
+          <text class='mp-ital'><b>Last Name:</b></text> {{ user.lname }} 
+          <br>
+          <text class='mp-ital'><b>Email:</b></text> {{ user.email }}
+          <form action="/user_settings">
+        </div>
+        <div class="col-md-6">
+          {% if user.description %}
+          <br>
+          <b>User Description:</b><br>
+            {{ user.description }}
+          {% endif %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          {% if user.favorites %}
 
-<br>
+          <p id='mp-fave-label'>{{ user.fname }}'s Favorites!</p>
+          <br>
+          <div style="display: flex; flex-direction: column;">
+            <div style="display: flex; flex-flow: row wrap;">
+              {% for favorite in user.favorites %}
 
-<form action="/upload" method="POST" enctype="multipart/form-data" >
-      <span class="btn btn-default btn-file">
-        Browse: <input type="file" name="upload-image">
-      </span>
-    <br>  
-    <input type="submit" value="Submit" class="btn btn-primary">
-</form>
+              <div class="card" style="width: 15em;">
+                <img class='display-bird-pic' src={{ favorite.bird.image }}></img>
+                <div class="card-body">
+                  <h5 class="card-title">{{ favorite.bird.common_name }} 
+                    <input type="checkbox" class="checkbox" name="remove_bird" data-com-name="{{ favorite.bird.common_name }}" data-sci-name="{{ favorite.bird.scientific_name }}" data-species-code="{{ favorite.bird.species_code }}">
+                  </h5>
 
-<br>
-<form action="/user_settings">
-    <input type="submit" value="Edit Settings" />
-</form>
-<br>
-<br>
-<p>First Name: {{ user.fname }} 
-<br>    
-Last Name: {{ user.lname }} 
-<br>
-Email: {{ user.email }}</p>
+                </div>
+              </div>
 
+              {% endfor %}
+            <br>
+          </div>
+          <button id="delFave" class="sub-btn" style="width: 80px;">Remove</button>
+              
+          {% else %}
+              <br>
+              You have not added any favorites yet!
+          {% endif %}
+              </div>
+              
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-
-{{ user.fname }}'s Favorites!
-<br>
-
-{% for favorite in user.favorites %}
-
-    <br>
-    <input type="checkbox" name="remove_bird" data-com-name="{{ favorite.bird.common_name }}" data-sci-name="{{ favorite.bird.scientific_name }}" data-species-code="{{ favorite.bird.species_code }}">
-    {{ favorite.bird.common_name }}
-    <br>
-    <img class='display-bird-pic' src={{ favorite.bird.image }}></img>
-    <br>
-
-{% endfor %}
-
-<br>
-<button id='delFave'>Remove</button>
-<br>
 
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
@@ -70,6 +103,7 @@ function refreshPage() {
 }
 
 function removeFaves(evt) {
+  evt.preventDefault();
   console.log("I pressed the 'remove' button")
   // send info: bird id and user id - to remove row from faves
 

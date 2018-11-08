@@ -30,25 +30,6 @@ app.jinja_env.undefined = StrictUndefined
 @app.route('/')
 def index():
     """Homepage"""
-    
-    # bird = Bird.query.first()
-
-    # birds_total = len(Bird.query.all()) # int of 6
-
-    # # print("TYPE OF DATA FOR BIRD QUERY ALL")
-    # # print(type(Bird.query.all()))
-
-    # # print("TYPE OF BIRDS TOTAL VAR")
-    # # print(type(birds_total))
-
-    # # print("LENGTH OF LEN BIRD QUERY")
-    # # print(len(Bird.query.all()))
-
-    # ran_bird = randint(1, len(Bird.query.all()))
-    # bird = Bird.query.get(ran_bird)
-
-    # # print("RANDOMIZED BIRD NUMBER IS.. ")
-    # # print(ran_bird)
 
     user = None
 
@@ -63,17 +44,16 @@ def index():
 
 
     return render_template('homepage.html', user=user)
-    # return render_template('homepage.html', bird=bird, user=user)
-    # return render_template('homepage.html', user=user, bird=bird)
 
 
 def get_hashed_password(plain_text_password):
-
+    """Takes in a plain text password and returns the hashed/salted password"""
     return bcrypt.hashpw(plain_text_password, bcrypt.gensalt())
 
 
 def check_password(plain_text_password, hashed_password):
-
+    """Takes in plain text password & hashed password and compares them
+    True if match, False if no match"""
     return bcrypt.checkpw(plain_text_password, hashed_password)
 
 
@@ -85,8 +65,8 @@ def login_form():
 
 @app.route('/login', methods=['POST'])
 def login_process():
+    """Login Process"""
 
-    # Users may use email OR username to log in
     username = request.form.get('login_id') #jhacks
     password = request.form.get('password') #jhacks
 
@@ -129,9 +109,9 @@ def registration_form():
 @app.route('/register', methods=['POST'])
 def registration_process():
 
-    username = request.form.get('reg_username')
-    email = request.form.get('reg_email')
-    password = request.form.get('reg_pw')
+    username = request.form.get('reg-username')
+    email = request.form.get('reg-email')
+    password = request.form.get('reg-pw')
     hashed_pw = get_hashed_password(password)
     regex_email = re.findall(r'[^@]+@[^@]+\.[^@]+', email)
     #doesn't handle the case of spaces
@@ -149,8 +129,8 @@ def registration_process():
     # if len(password) > 8 & len(password) < 17:
     #     valid_password = password
 
-    fname = request.form.get('reg_fname')
-    lname = request.form.get('reg_lname')
+    fname = request.form.get('reg-fname')
+    lname = request.form.get('reg-lname')
 
     # Check that user var matches an entry in db
     user = User.query.filter(User.email == email).first()
@@ -210,16 +190,6 @@ def user_feed():
         if user.image_name:
             user.image_name = str(user.image_name) + '?{}'.format( str(time.time()) )
 
-    # user = User.query.get(session['user_id'])
-    # favorite = Favorite.query.get().all()
-
-    # get_bird_data(species_code)
-    # bird_common_name = bird_data[0]['comName']
-    # bird_photo_id = get_photos_by_text(bird_common_name)
-    # bird_photo = get_image_flickr(bird_photo_id)
-    # print("USER.IMAGE_NAME IS: ")
-    # print(user.image_name)
-
     return render_template('my_page.html', user=user)
 
 
@@ -229,6 +199,7 @@ def forget_password_page():
     """Old and will probably be deleted"""
 
     return render_template('forgot_password.html')
+
 
 @app.route('/reset_password')
 def reset_password():
@@ -293,6 +264,10 @@ def upload_file():
     file = request.files['upload-image']
     image_name = None
 
+    if 'upload-image' not in request.files: 
+        flash("No file was selected - please choose one and resubmit.")
+        return redirect('/users/my_page')
+
     if file.filename == '':
         # Fix this 
         flash("Oh no! Could not save image.")
@@ -300,10 +275,6 @@ def upload_file():
     
     filename = file.filename
     file.save(os.path.join(app.config['UPLOAD_FOLDER'], str(session['user_id']) + '_profile.jpg'))
-    print("FILE IS: ")
-    print(file)
-    print("FILENAME IS:")
-    print(filename)
 
     image_name = str(session['user_id']) + '_profile.jpg'
 
@@ -325,7 +296,6 @@ def about_page():
 
     return render_template("/about.html")
 
-
 # This page won't exist, eventually.. unless it's a list of all birds that have been favorited
 @app.route('/birds_list')
 def birds_list():
@@ -339,39 +309,47 @@ def birds_list():
 def change_user_info():
 
     # Get new values
-    new_username = request.form.get('upd_username')
-    new_fname = request.form.get('upd_fname')
-    new_lname = request.form.get('upd_lname')
-    new_email = request.form.get('upd_email')
-    new_pw = request.form.get('upd_pw')
-
-    if new_fname.strip().isalpha():  #if an entry in our request.args dict exists:
-        # new_fname.strip()
-        new.fname.lower()
-        new.fname.title()
-        user.fname = new_fname
-    else: 
-        flash("Please enter a valid first name!")
-
-    if new_lname.strip().isalpha():
-        # new_lname.strip()
-        new.lname.lower()
-        new.lname.title()
-        user.lname = new_fname
-    else: 
-        flash("Please enter a valid last name!")
+    new_username = request.form.get('upd-username')
+    new_fname = request.form.get('upd-fname')
+    new_lname = request.form.get('upd-lname')
+    new_email = request.form.get('upd-email')
+    new_pw = request.form.get('upd-pw')
+    input_pw = request.form.get('check-pw')
+    user = User.query.get(session['user_id'])
+    print("Printing user: ")
+    print(user)
+    # check_pw = check_password(input_pw, user.password)
 
 
-    if new_username.strip().isalum():
-        # new_username.strip()
-        use.username = new_username
-    else: 
-        flash("Please enter a valid first name!")
 
-    if new_email:
-        new_email.strip()
-        new_email.lower()
-        user.email = new_email
+    # if new_fname.strip().isalpha():  #if new_fname is True (all characters):
+    #     # new_fname.strip()
+    #     new_fname.lower()
+    #     new_fname.title()
+    #     user.fname = new_fname
+
+    # else: 
+    #     print("Please enter a valid first name!")
+
+    # if new_lname.strip().isalpha():
+    #     # new_lname.strip()
+    #     new_lname.lower()
+    #     new_lname.title()
+    #     user.lname = new_fname
+    # else: 
+    #     print("Please enter a valid last name!")
+
+    # if new_username:
+    #     # new_username.strip()
+    #     user.username = new_username
+
+    # else: 
+    #     print("Please enter a valid first name!")
+
+    # if new_email:
+    #     new_email.strip()
+    #     new_email.lower()
+    #     user.email = new_email
 
     # strip if no trailing white space
     # entire username alphanumeric (letters & nums)
@@ -381,35 +359,53 @@ def change_user_info():
 
 
     # ask for old pw too, if correct and
-    if new_pw: 
-        if new_pw == new_pw2: 
-            new_hashed_pw = get_hashed_password(new_pw)
-            user.password = new_hashed_pw
-            db.session.commit()
+    # if check_pw == user.password: 
+        # if new_pw == new_pw2: 
+        #     new_hashed_pw = get_hashed_password(new_pw)
+        #     user.password = new_hashed_pw
+        #     db.session.commit()
 
-        else: 
-            print("The passwords don't match! Try again")
-            flash("The passwords don't match! Try again")
+        # else: 
+        #     print("The passwords don't match! Try again")
 
-    user = User.query.get(session['user_id'])
 
-    print("USER'S OLD FIRST NAME IS: ")
-    print(user.fname)
-    print("USER'S FIRST NAME IS: ")
-    print(new_fname)
+    # print("USER'S OLD FIRST NAME IS: ")
+    # print(user.fname)
+    # print("USER'S FIRST NAME IS: ")
+    # print(new_fname)
 
     # user.email = new_email
     # user.fname = new_fname
     # user.lname = new_lname
     # new_hashed_pw = get_hashed_password(new_pw)
-
+    user.fname = new_fname
+    user.lname = new_lname
     user.username = new_username
+    user.email = new_email
+
+    
+    # user.username = new_username
     print("USER'S NEW FNAME IS: ")
     print(user.username)
 
     db.session.commit()
 
-    return redirect('/')
+    return redirect('/users/my_page')
+
+@app.route('/update_user_desc', methods=['POST'])
+def update_user_desc():
+
+    user_desc = request.form.get('profile-desc')
+    user = User.query.get(session['user_id']) 
+
+    if user_desc is not None:
+        flash("Description updated!")
+        user.description = user_desc
+        db.session.commit()
+        return redirect('/users/my_page')
+    else:
+        return redirect('/users/my_page')
+
 
 
 @app.route('/get_bird_page_data')
@@ -515,10 +511,6 @@ def view_birds(species_code):
     if bird:
         favorite = Favorite.query.filter(Favorite.user_id==session['user_id'], Favorite.bird_id==bird.bird_id).first() # find first entry with this
 
-    print("Favorite is: " + str(favorite))
-
-    print("Bird common name: ")
-    print(bird_common_name)
     xc_url = get_xenocanto_json(bird_common_name)
     
     print("XC URL IS: ")
@@ -676,7 +668,7 @@ def add_user_favorite():
     db.session.commit()
 
     flash("Yay, added!")
-    return "Yay! Added."
+    return redirect('/birds/' + species_code)
 
 
 @app.route('/remove_fave', methods=['POST'])
@@ -692,8 +684,9 @@ def remove_user_favorite():
 
     # db.session.delete(check_favorite)
     # db.session.commit()
-
-    return "Removed fave!"
+    print("Removed fave!")
+    # return "Removed fave!"
+    return redirect('/birds/' + species_code)
 
 
 def remove_favorite(species_code):
@@ -746,43 +739,6 @@ def add_remove_favorite(bird_id):
 
     return "Success!"
 
-
-
-# API info
-# make dict {
-#     'key': value,
-# }
-
-# const options = {
-    
-# };
-# can add scales (dict to go to xAxes: sicts to go to ticks > beginAtZero)
-
-# in js: let ctx_donut = $("#canvas_id").get'0).getContext('2D') #graph will be where the chart shows up
-# make get request to server
-# $.get('/route.json'), function (data) {
-#     let myDonutChart = new Chart(ctx_donut, {
-#         type: "donut',
-#         data: data,
-#         options: options
-#         });
-# }
-
-# var ctx = document.getElementById("myChart");
-# var myChart = new Chart(ctx, {
-#   type: 'line',
-#   data: {
-#     labels: years,
-#     datasets: [
-#       { 
-#         data: africa
-#       }
-#     ]
-#   }
-# });
-
-
-
 @app.route('/map')
 def show_map():
 
@@ -809,35 +765,15 @@ def get_user_info():
     print("Search for username is: ")
     print(search_for_username)
     user = User.query.filter(User.username == search_for_username).first()
+    print("USER is: ")
     print(user)
-    print(type(user))
-    username_id = user.user_id
-
     if user: 
-        print("User exists! Here is their page: ")
-        return render_template('/users/' + str(username_id))
+        username_id = user.user_id
+        print("User exists!")
+        return render_template('user_profile.html')
     else: 
+        print("There is no user!")
         return redirect('/users_list')
-    
-
-
-@app.route('/search_for_user')
-def get_user_from_search():
-    search_for_username = request.args.get('searchFor')
-    # user = User.query.all()
-    print("Search for this username: ")
-    print(search_for_username)
-    
-    
-    
-
-
-
-# @app.route('/users/<user_id>')
-# def show_user_profile(user_id):
-#     """Shows specific user's profile"""
-#     user = User.query.get(user_id)
-#     return render_template('user_profile.html', user=user)
 
 
 @app.route('/about')

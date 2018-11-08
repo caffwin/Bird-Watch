@@ -1,27 +1,70 @@
 {% extends 'base.html' %}
 
+{% block title %}{{ user.username }}'s Profile{% endblock %}
 
 {% block content %}
-<h1>User {{ user.user_id }}'s profile page</h1>
-<h5>(This is public)</h5>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6">
+                    <h1 class='title-user'>{{ user.username}} ({{ user.fname }})</h1>
+                </div>
+                <div class="col-md-6">
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-3">  
+                    
+                    {% if user.image_name %}
+
+                        <img class="user-pic-pub" src="/static/user_pics/{{user.image_name}}"></img>
+
+                    {% else %}
+
+                        <img class="user-pic" src="/static/user_pics/generic_silhouette.png"></img>
+                        
+                    {% endif %} 
+                    <br>
+                    <br>
+                    {% if user.description %}
+                    <div class='desc-profile'>{{ user.description }}</div>
+                    {% endif %}
+                    <br>
+                </div>
+                <div class="col-md-9">
+                    {% if user.favorites: %}
+
+                        {{ user.fname }}'s Favorites:
+                        <br>
+                        {% for favorite in user.favorites %}
+                     
+                            <img class=".pub-fave-img" height='200px' width='300px' overflow='hidden' border-radius='25px' src="{{ favorite.bird.image }}"></img>
+                       
+
+                        {% endfor %}
+                    
+                    {% else %}
+
+                        This user currently has no favorites!
+
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+</div>
+
+
 <br>
-Profile photo:
 <br>
-
-{% if user.image_name %}
-
-    <img class="user_pic" src="/static/user_pics/{{user.image_name}}"></img>
-
-{% else %}
-
-    <img class="user_pic" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0exBi6zdo2_NSyPhtPeaz6VTxwwlabc1P-BlbAQz90L8VWvYhjQ"></img>
-    
-{% endif %} 
-
 <br>
-
-<br>
-{{ user.fname }} "{{ user.username}}" {{ user.lname }}'s page!
 <br>
 <br>
 <script>
@@ -41,21 +84,7 @@ Profile photo:
 
 </script>
 
-{% for favorite in user.favorites %}
-    <br>
-    <img src={{ favorite.bird.image }}></img>
-    <br>
-
-{% endfor %}
-
 <!-- <button id='followAndUnfollow' class='followIcon' onclick='followUnfollow()'>Follow</button> -->
-
-<br>
-Description
-<br>
-Favorites list
-<br>
-<br>
 
 
 {% endblock %}
