@@ -453,7 +453,7 @@ THIS IS WHERE THE MAGIC HAPPENS
 
 body{
   min-height: 2000px;  
-  background: url('/static/barnowl.jpeg');
+/*  background: url('/static/barnowl.jpeg');*/
 }
 
 .curtain{
