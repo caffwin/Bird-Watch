@@ -6,7 +6,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from random import randint
 from model import Bird, User, Favorite, Checklist, connect_to_db, db
 
-from sqlalchemy import update # Might not need this
+from sqlalchemy import update 
 
 import requests 
 import re
@@ -67,8 +67,8 @@ def login_form():
 def login_process():
     """Login Process"""
 
-    username = request.form.get('login_id') #jhacks
-    password = request.form.get('password') #jhacks
+    username = request.form.get('login_id') 
+    password = request.form.get('password') 
 
     user = User.query.filter(User.email == username).first()
 
@@ -79,22 +79,15 @@ def login_process():
     if user:
         if len(password) > 8 & len(password) < 17: 
             check_pw = check_password(password, user.password)
-            # if password = hashed_password
             if check_pw:
-            # if user.password == password:
                 print("Password matches username!")
                 flash("You are now logged in!")
-                session['user_id'] = user.user_id # saves to session
-                # return redirect('/users/{}'.format(user.user_id))
+                session['user_id'] = user.user_id 
                 return redirect('/users/my_page')
-                # Redirect here instead for personal feed
-            # elif user.password == None:
-            #     return redirect('/')
 
         else: 
             print("Please enter a password between 8-16 characters!")
             return redirect('/')
-            # This happens when username typed, password blank
 
     else: 
         print("User not found! Please try again, or register.")
@@ -114,45 +107,28 @@ def registration_process():
     password = request.form.get('reg-pw')
     hashed_pw = get_hashed_password(password)
     regex_email = re.findall(r'[^@]+@[^@]+\.[^@]+', email)
-    #doesn't handle the case of spaces
-
-    # check to make sure user doesn't already exist before
-    # allowing new entry to be made in DB
 
     regex_username = re.match("^[a-zA-Z0-9_.-]+$", username)
-    # must be alphanumeric
-    # Returns none if strange characters entered or space in name
-    # Returns match object if matching string 
-
-    # if regex_username == None: # if it's something
-
-    # if len(password) > 8 & len(password) < 17:
-    #     valid_password = password
 
     fname = request.form.get('reg-fname')
     lname = request.form.get('reg-lname')
 
-    # Check that user var matches an entry in db
     user = User.query.filter(User.email == email).first()
 
-    if user == None: # If user doesn't exist in db
-        # if regex_email: # if regex_username is valid
-        # Add user to db
+    if user == None: 
         print("User added!")
         flash("User added!")
-        print(regex_username) # evaluated to none when "sdfosdijf  e9" entered
+        print(regex_username) 
         if regex_username is not None:
             print("REGEX USERNAME: ")
             print(regex_username)
             print("Username alphanumeric!")
             flash("Username alphanumeric!")
-        # make sure password also valid
-        # if username.isalnum() == True:
+
             print("REGEX EMAIL: ")
             print(regex_email)
             if regex_email is not None: 
                 print("Regex'd email is valid!")
-        # user = User(username=username, password=hashed_pw, email=email, fname=fname, lname=lname)
                 user = User(username=username, password=hashed_pw, email=email, fname=fname, lname=lname)
                 db.session.add(user)
                 db.session.commit()
@@ -161,7 +137,7 @@ def registration_process():
         else:
             print("One or more fields are invalid! Please try again.")
             return redirect('/register')
-    else: # user already exists in db
+    else: 
         print("This user already exists! Please log in.")
         flash("This user already exists! Please log in.")
 
@@ -259,7 +235,6 @@ def get_birds_from_api():
 @app.route('/upload', methods=['POST'])
 def upload_file():
     user = User.query.get(session['user_id'])
-    # check if the post request has the file part
 
     file = request.files['upload-image']
     image_name = None
@@ -308,7 +283,6 @@ def birds_list():
 @app.route('/update_user_settings', methods=['POST'])
 def change_user_info():
 
-    # Get new values
     new_username = request.form.get('upd-username')
     new_fname = request.form.get('upd-fname')
     new_lname = request.form.get('upd-lname')
@@ -319,8 +293,6 @@ def change_user_info():
     print("Printing user: ")
     print(user)
     # check_pw = check_password(input_pw, user.password)
-
-
 
     # if new_fname.strip().isalpha():  #if new_fname is True (all characters):
     #     # new_fname.strip()
@@ -378,12 +350,12 @@ def change_user_info():
     # user.fname = new_fname
     # user.lname = new_lname
     # new_hashed_pw = get_hashed_password(new_pw)
+
     user.fname = new_fname
     user.lname = new_lname
     user.username = new_username
     user.email = new_email
 
-    
     # user.username = new_username
     print("USER'S NEW FNAME IS: ")
     print(user.username)
@@ -463,7 +435,7 @@ def get_bird_data(species_code):
     r = requests.get(url=ebird_URL, params=ebird_params, headers=headers)
     bird_data = r.json()
 
-    return bird_data #bird_data is a single bird obj
+    return bird_data 
 
 
 @app.route('/birds/<species_code>')
@@ -550,9 +522,6 @@ def get_photos_by_text(text):
     """Returns photo objects using a comName keyword 'text' from eBird API"""
     """Gets photo object "ID" attribute from JSON file"""
 
-    # make get request using common name of bird to get objects with that name
-    # in the "title" attribute
-
     photo_by_title_URL = 'https://api.flickr.com/services/rest/'
     
     title_params = {
@@ -566,18 +535,12 @@ def get_photos_by_text(text):
     r = requests.get(url = photo_by_title_URL, params = title_params)
     photo_data = r.json()
 
-    # print("PHOTO DATA AND TYPE: ")
-    # print(photo_data)
-    # print(type(photo_data)) # dict
-    # photo_id = photo_data['photos']['photo'][4]['id']
-
     photo_ids = []
   
     for i in range(0, 4):
         photo = photo_data['photos']['photo'][i]['id']
         photo_ids.append(photo)
 
-    # photo_ids is a list of four photo IDs from the Flickr JSON file
     return photo_ids
 
 def get_bird_pic_flickr(photo_id):
@@ -597,9 +560,7 @@ def get_bird_pic_flickr(photo_id):
     r = requests.get(url=actual_image_URL, params=params)
     photo_data = r.json()
 
-    # Number index specifies desired size dimension 
     bird_src = photo_data['sizes']['size'][3]['source']
-    # bird_src is a list of one item - must be a list 
     photo_url.append(bird_src)
 
     return photo_url
@@ -611,7 +572,6 @@ def get_image_flickr(photo_ids):
     actual_image_URL = 'https://api.flickr.com/services/rest/'
     photo_urls = []
 
-    # photo_ids is a list 
     for photo_id in photo_ids:
         
         params = { 'method': 'flickr.photos.getSizes',
@@ -646,7 +606,7 @@ def add_user_favorite():
     user_id = session['user_id']
     user = User.query.get(session['user_id']) 
 
-    photo_id = get_photos_by_text(common_name) # this is a photo ID
+    photo_id = get_photos_by_text(common_name) 
     image_url = get_bird_pic_flickr(photo_id)
     image_index = image_url[0]
     print("PHOTO ID IS: ")
@@ -673,19 +633,11 @@ def add_user_favorite():
 
 @app.route('/remove_fave', methods=['POST'])
 def remove_user_favorite():
-    # print("speciesCodes are: " + str(request.form.get('speciesCodes')))
 
     species_code = request.form.get('speciesCode')
-
     remove_favorite(species_code)
-    # bird = Bird.query.filter(Bird.species_code == species_code).first()
 
-    # check_favorite = Favorite.query.filter((Favorite.user_id == session['user_id']), (Favorite.bird_id == bird.bird_id)).first()
-
-    # db.session.delete(check_favorite)
-    # db.session.commit()
     print("Removed fave!")
-    # return "Removed fave!"
     return redirect('/birds/' + species_code)
 
 
@@ -710,24 +662,17 @@ def remove_numerous_faves():
 
     print("here are the species codes: ")
     print(species_codes)
-    # return redirect('/users/my_page')
+
     return "Removed!"
 
 
-# make fave route with post request
 @app.route('/favorite/<bird_id>', methods=['POST']) 
 def add_remove_favorite(bird_id):
     """Adds or removes bird from favorites table"""
-    print(bird_id) # gives correct info - bird ID number
-    print('we are going to favorite a bird with id {}'.format(bird_id))
+    print('favoriting a bird with id {}'.format(bird_id))
 
     favorite = Favorite(bird_id=bird_id, user_id=session['user_id'])
-    # favorite = Favorite.query.filter_by(bird_id=bird_id).get()
     check_favorite = Favorite.query.filter((Favorite.user_id == session['user_id']), (Favorite.bird_id == bird_id))
-    # Check that user var matches an entry in db
-    # user = User.query.filter(User.email == email).first()
-    # favorite = Favorite.query.filter(Favorite.bird_id == bird.id).first()
-
 
     if check_favorite:
         db.session.delete(check_favorite)
@@ -783,7 +728,8 @@ def get_about_page():
 
 if __name__ == "__main__":
 
-    app.debug = False
+    # app.debug = False
+    app.run()
     app.jinja_env.auto_reload = app.debug
 
     connect_to_db(app)
