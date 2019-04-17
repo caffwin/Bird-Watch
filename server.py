@@ -20,6 +20,7 @@ UPLOAD_FOLDER = 'static/user_pics'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 app = Flask(__name__)
+
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 500 * 500
 
@@ -38,7 +39,6 @@ def index():
         print('You are logged in as ' + str(session['user_id']))
         flash('You are now logged in!')
         # print(user.fname)
-
     else:
         print('No one is currently logged in.')
 
@@ -729,6 +729,7 @@ def get_about_page():
 if __name__ == "__main__":
 
     # app.debug = False
+    # app.run(debug=True)
     app.run()
     app.jinja_env.auto_reload = app.debug
 
